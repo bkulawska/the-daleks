@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import model.*;
 
 public class Main extends Application {
 
@@ -19,5 +20,11 @@ public class Main extends Application {
 
         primaryStage.setScene(new Scene(rootLayout));
         primaryStage.show();
+
+        //just some quick temporary tests
+        //Grid grid = new Grid(20, 20);
+        //Engine engine = new Engine(grid);
+        //engine.run();
+        //end
     }
 }
