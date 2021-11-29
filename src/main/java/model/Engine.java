@@ -1,5 +1,7 @@
 package model;
 
+import model.entity.Entity;
+
 import java.util.List;
 
 public class Engine {
@@ -10,24 +12,24 @@ public class Engine {
 
     public Engine(Grid grid) {
         this.grid = grid;
+        grid.placeRandomAnimals(20);
+        grid.placeRandomRocks(10);
         this.collisionDetector = new CollisionDetector();
         this.collisionResolver = new CollisionResolver(this.grid);
     }
 
-    public void run(){
-        //changes will be made here according to further instructions about the game
-        grid.placeFirstEntities();
-        for(int i=0; i<3; i++){
-           step();
-        }
+    /**
+     *  Do one round logic
+     *  Changes will be made here according to further instructions about the game
+     */
+    public void step(){
+        grid.moveMovables();
+        var collisions = collisionDetector.detect(grid.getEntitiesMap());
+        collisionResolver.resolve(collisions);
     }
 
-    public void step(){
-        //do one round logic
-        //changes will be made here according to further instructions about the game
-        grid.moveMovables();
-        List<Pair<Entity, Entity>> collisions = collisionDetector.detect(grid.entities);
-        collisionResolver.resolve(collisions);
+    public List<Entity> getEntitiesList() {
+        return grid.getEntitiesList();
     }
 
 }

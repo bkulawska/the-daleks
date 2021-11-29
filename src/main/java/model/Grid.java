@@ -1,11 +1,13 @@
 package model;
 
+import model.entity.*;
+import utils.Direction;
+import utils.Vector2d;
 import java.util.*;
 
 public class Grid {
 
-    public HashMap<Vector2d, ArrayList<Entity>> entities = new HashMap<>();
-    public ArrayList<Entity> movableEntities = new ArrayList<>();
+    private final Map<Vector2d, List<Entity>> entities = new HashMap<>();
     private final int width;
     private final int height;
 
@@ -14,59 +16,58 @@ public class Grid {
         this.height=height;
     }
 
-    public void placeFirstEntities() {
-        //changes will be made here according to further instructions about the game
-        //temporary
-        Animal animal1 = new Animal(2,2);
-        Animal animal2 = new Animal(2,2);
-        Rock rock1 = new Rock(3,3);
-        Rock rock2 = new Rock(5,5);
-        place(animal1);
-        place(animal2);
-        place(rock1);
-        place(rock2);
+    /**
+     * Temporary method, to populate map with some animals
+     * @param count - number of animals to place
+     */
+    public void placeRandomAnimals(int count) {
+        var r = new Random();
+        for (int i=0; i<count; i++)
+            place(new Animal(r.nextInt(width), r.nextInt(height)));
+    }
+
+    /**
+     * Temporary method, to populate map with some rocks
+     * @param count - number of rocks to place
+     */
+    public void placeRandomRocks(int count) {
+        var r = new Random();
+        for (int i=0; i<count; i++)
+            place(new Rock(r.nextInt(width), r.nextInt(height)));
     }
 
     public void place (Entity entity){
-        Vector2d v = entity.getPosition();
-        ArrayList<Entity> list = entities.get(v);
-        if (list==null){
-            ArrayList<Entity> newList = new ArrayList<>();
-            newList.add(entity);
-            entities.put(v, newList);
-        }
-        else {
-            list.add(entity);
-        }
-
-        if (entity instanceof Movable){
-           movableEntities.add(entity);
-        }
+        var key = entity.getPosition();
+        entities.computeIfAbsent(key, value -> new ArrayList<>());
+        entities.get(key).add(entity);
     }
 
     public void remove(Entity entity){
-        Vector2d v = entity.getPosition();
-        ArrayList<Entity> list = entities.get(v);
-        if (list!=null && !list.isEmpty()){
-            entities.remove(v);
-            list.remove(entity);
-            entities.put(v, list);
-        }
-
-        if (entity instanceof Movable){
-            movableEntities.remove(entity);
+        if (entities.containsKey(entity.getPosition())) {
+            entities.get(entity.getPosition()).remove(entity);
         }
     }
 
     public void moveMovables(){
-        ArrayList<Entity> tempList = movableEntities;
-        for (Entity entity: tempList){
-            //changes will be made here according to further instructions about the game
-            Vector2d v = new Vector2d(1, 1);
-            remove(entity);
-            ((Movable)entity).move(v);
-            place(entity);
-        }
+        // store movableEntities in tmp list
+        List<Entity> movableEntities = new ArrayList<>();
+        entities.values().stream()
+                .flatMap(List::stream)
+                .forEach(entity -> { if (entity instanceof Movable) movableEntities.add(entity); });
+
+        // remove all movableEntities from entities
+        movableEntities.forEach(this::remove);
+
+        // move them (by a random vector, temporarily)
+        var r = new Random();
+        var allDirections = Arrays.asList(Direction.values());
+        movableEntities.forEach(entity -> {
+            var direction = allDirections.get(r.nextInt(Direction.N_DIRECTIONS));
+            ((Movable) entity).move(direction.getVector());
+        });
+
+        // put stored, moved entities back to hash map
+        movableEntities.forEach(this::place);
     }
 
     public int getWidth(){
@@ -75,6 +76,14 @@ public class Grid {
 
     public int getHeight(){
         return this.height;
+    }
+
+    public Map<Vector2d, List<Entity>> getEntitiesMap() {
+        return entities;
+    }
+
+    public List<Entity> getEntitiesList() {
+        return entities.values().stream().flatMap(List::stream).toList();
     }
 
 }
