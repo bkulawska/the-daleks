@@ -1,15 +1,16 @@
 package controller;
 
-import javafx.event.ActionEvent;
+import com.google.inject.Inject;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import model.Engine;
 import renderer.Renderer;
 
+
 public class MainController {
 
-    private Engine engine;
+    private final Engine engine;
     private Renderer renderer;
 
     @FXML
@@ -17,22 +18,18 @@ public class MainController {
     @FXML
     public Button stepButton;
 
-    public MainController() {
-
+    @Inject
+    public MainController(Engine engine) {
+        this.engine = engine;
     }
 
     @FXML
     public void initialize() {
-
-    }
-
-    public void initialSetup(Engine engine) {
-        this.engine = engine;
-        this.renderer = new Renderer(this.canvas, engine.grid.getWidth(), engine.grid.getHeight());
+        this.renderer = new Renderer(this.canvas, engine.getGrid().getWidth(), engine.getGrid().getHeight());
         renderer.updateCanvas(engine.getEntitiesList());
     }
 
-    public void onStepAction(ActionEvent actionEvent) {
+    public void onStepAction() {
         engine.step();
         renderer.updateCanvas(engine.getEntitiesList());
     }

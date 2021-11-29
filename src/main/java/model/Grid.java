@@ -1,8 +1,14 @@
 package model;
 
-import model.entity.*;
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+import model.entity.Animal;
+import model.entity.Entity;
+import model.entity.Movable;
+import model.entity.Rock;
 import utils.Direction;
 import utils.Vector2d;
+
 import java.util.*;
 
 public class Grid {
@@ -11,13 +17,15 @@ public class Grid {
     private final int width;
     private final int height;
 
-    public Grid(int width, int height){
-        this.width=width;
-        this.height=height;
+    @Inject
+    public Grid(@Named("gridWidth") int width, @Named("gridHeight") int height) {
+        this.width = width;
+        this.height = height;
     }
 
     /**
      * Temporary method, to populate map with some animals
+     *
      * @param count - number of animals to place
      */
     public void placeRandomAnimals(int count) {
