@@ -7,10 +7,10 @@ import model.entity.Animal;
 import model.entity.Entity;
 import model.entity.Rock;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CollisionResolver {
-
     private final CollisionHandlersMap handlersMap;
     private final Grid grid;
 
@@ -37,6 +37,14 @@ public class CollisionResolver {
         for (Pair<Entity, Entity> collision : collisions) {
             handlersMap.getHandler(collision).run();
         }
+    }
+
+    public ArrayList<Runnable> getConflictSolutionsHandlers(List<Pair<Entity, Entity>> collisions){
+        ArrayList<Runnable> conflictSolutionsHandlers = new ArrayList<>();
+        for (Pair<Entity, Entity> collision : collisions) {
+            conflictSolutionsHandlers.add(handlersMap.getHandler(collision));
+        }
+        return conflictSolutionsHandlers;
     }
 
 

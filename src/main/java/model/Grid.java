@@ -71,7 +71,7 @@ public class Grid {
         var allDirections = Arrays.asList(Direction.values());
         movableEntities.forEach(entity -> {
             var direction = allDirections.get(r.nextInt(Direction.N_DIRECTIONS));
-            ((Movable) entity).move(direction.getVector());
+            performMoveOnGrid(entity, direction);
         });
 
         // put stored, moved entities back to hash map
@@ -92,6 +92,17 @@ public class Grid {
 
     public List<Entity> getEntitiesList() {
         return entities.values().stream().flatMap(List::stream).toList();
+    }
+
+    public boolean canMove(Entity entity, Direction direction){
+        Vector2d vec = direction.getVector();
+        return entity.getPosition().x + vec.x >= 0 && entity.getPosition().x + vec.x < getWidth() &&
+                entity.getPosition().y + vec.y >= 0 && entity.getPosition().y + vec.y < getHeight();
+    }
+
+    public void performMoveOnGrid(Entity entity, Direction direction){
+        if (canMove(entity, direction))
+            ((Movable) entity).move(direction.getVector());
     }
 
 }
