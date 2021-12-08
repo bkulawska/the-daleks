@@ -4,8 +4,13 @@ import com.google.inject.Inject;
 import model.collisions.CollisionDetector;
 import model.collisions.CollisionResolver;
 import model.entity.Entity;
+import model.entity.Movable;
+import utils.Direction;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class Engine {
 
@@ -35,9 +40,32 @@ public class Engine {
      * Changes will be made here according to further instructions about the game
      */
     public void step() {
-        grid.moveMovables();
+        moveMovables();
         var collisions = collisionDetector.detect(grid.getEntitiesMap());
         collisionResolver.resolve(collisions);
+    }
+
+    public void moveMovables() {
+        // store movableEntities in tmp list
+        List<Entity> movableEntities = new ArrayList<>();
+        grid.getEntitiesList()
+                .forEach(entity -> {
+                    if (entity instanceof Movable) movableEntities.add(entity);
+                });
+
+        // remove all movableEntities from entities
+        movableEntities.forEach(grid::remove);
+
+        // move them (by a random vector, temporarily)
+        var r = new Random();
+        var allDirections = Arrays.asList(Direction.values());
+        movableEntities.forEach(entity -> {
+            var direction = allDirections.get(r.nextInt(Direction.N_DIRECTIONS));
+            grid.performMoveOnGrid(entity, direction);
+        });
+
+        // put stored, moved entities back to hash map
+        movableEntities.forEach(grid::place);
     }
 
 }

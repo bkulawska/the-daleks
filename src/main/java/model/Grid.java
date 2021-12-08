@@ -56,28 +56,6 @@ public class Grid {
         }
     }
 
-    public void moveMovables(){
-        // store movableEntities in tmp list
-        List<Entity> movableEntities = new ArrayList<>();
-        entities.values().stream()
-                .flatMap(List::stream)
-                .forEach(entity -> { if (entity instanceof Movable) movableEntities.add(entity); });
-
-        // remove all movableEntities from entities
-        movableEntities.forEach(this::remove);
-
-        // move them (by a random vector, temporarily)
-        var r = new Random();
-        var allDirections = Arrays.asList(Direction.values());
-        movableEntities.forEach(entity -> {
-            var direction = allDirections.get(r.nextInt(Direction.N_DIRECTIONS));
-            performMoveOnGrid(entity, direction);
-        });
-
-        // put stored, moved entities back to hash map
-        movableEntities.forEach(this::place);
-    }
-
     public int getWidth(){
         return this.width;
     }
@@ -96,13 +74,13 @@ public class Grid {
 
     public boolean canMove(Entity entity, Direction direction){
         Vector2d vec = direction.getVector();
-        return entity.getPosition().x + vec.x >= 0 && entity.getPosition().x + vec.x < getWidth() &&
-                entity.getPosition().y + vec.y >= 0 && entity.getPosition().y + vec.y < getHeight();
+        return entity.getPosition().x() + vec.x() >= 0 && entity.getPosition().x() + vec.x() < getWidth() &&
+                entity.getPosition().y() + vec.y() >= 0 && entity.getPosition().y() + vec.y() < getHeight();
     }
 
     public void performMoveOnGrid(Entity entity, Direction direction){
-        if (canMove(entity, direction))
+        if (canMove(entity, direction)) {
             ((Movable) entity).move(direction.getVector());
+        }
     }
-
 }

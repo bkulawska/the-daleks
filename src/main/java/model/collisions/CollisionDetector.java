@@ -1,5 +1,6 @@
 package model.collisions;
 
+import com.google.inject.Singleton;
 import javafx.util.Pair;
 import model.entity.Entity;
 import utils.Vector2d;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Singleton
 public class CollisionDetector {
 
     public CollisionDetector() {

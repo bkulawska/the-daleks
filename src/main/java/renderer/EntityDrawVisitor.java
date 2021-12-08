@@ -37,6 +37,6 @@ public class EntityDrawVisitor implements EntityVisitor {
 
     private void drawColoredSquare(Vector2d position, Color color) {
         context.setFill(color);
-        context.fillRect(position.x, position.y, 1, 1);
+        context.fillRect(position.x(), position.y(), 1, 1);
     }
 }

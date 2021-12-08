@@ -11,7 +11,7 @@ public class Animal extends Entity implements Movable {
 
     @Override
     public void move(Vector2d direction){
-        this.position.add(direction);
+        this.position = this.position.add(direction);
     }
 
     @Override

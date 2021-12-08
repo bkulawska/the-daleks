@@ -4,7 +4,6 @@ import javafx.util.Pair;
 import model.entity.Entity;
 
 import java.util.*;
-import java.util.function.BiConsumer;
 
 
 public class CollisionHandlersMap {
@@ -15,16 +14,16 @@ public class CollisionHandlersMap {
         }
     }
 
-    private final Map<SortedSet<Class<? extends Entity>>, BiConsumer<Entity, Entity>> handlersMap = new HashMap<>();
+    private final Map<SortedSet<Class<? extends Entity>>, CollisionHandler> handlersMap = new HashMap<>();
 
-    private BiConsumer<Entity, Entity> defaultHandler = (e1, e2) -> {
+    private CollisionHandler defaultHandler = (e1, e2) -> {
     };
 
-    public void setDefaultHandler(BiConsumer<Entity, Entity> defaultHandler) {
+    public void setDefaultHandler(CollisionHandler defaultHandler) {
         this.defaultHandler = defaultHandler;
     }
 
-    public void putHandler(Pair<Class<? extends Entity>, Class<? extends Entity>> entities, BiConsumer<Entity, Entity> handler) {
+    public void putHandler(Pair<Class<? extends Entity>, Class<? extends Entity>> entities, CollisionHandler handler) {
         var entitiesSet = new TreeSet<>(new EntitiesComparator());
         entitiesSet.add(entities.getKey());
         entitiesSet.add(entities.getValue());
