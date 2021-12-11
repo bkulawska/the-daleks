@@ -12,10 +12,15 @@ import utils.Vector2d;
 import java.util.*;
 
 public class Grid {
-
-    private final Map<Vector2d, List<Entity>> entities = new HashMap<>();
+    /* entities not final for test purposes - needed to set example entities to test Engine.moveMovables() */
+    private Map<Vector2d, List<Entity>> entities = new HashMap<>();
     private final int width;
     private final int height;
+
+    /**
+     * Temporary attributes for Grid tests
+     */
+    private List<Entity> movablesThatCouldNotMove;
 
     @Inject
     public Grid(@Named("gridWidth") int width, @Named("gridHeight") int height) {
@@ -56,31 +61,38 @@ public class Grid {
         }
     }
 
-    public int getWidth(){
-        return this.width;
-    }
-
-    public int getHeight(){
-        return this.height;
-    }
-
-    public Map<Vector2d, List<Entity>> getEntitiesMap() {
-        return entities;
-    }
-
-    public List<Entity> getEntitiesList() {
-        return entities.values().stream().flatMap(List::stream).toList();
-    }
-
-    public boolean canMove(Entity entity, Direction direction){
+    public boolean canMove(Entity entity, Direction direction) {
         Vector2d vec = direction.getVector();
         return entity.getPosition().x() + vec.x() >= 0 && entity.getPosition().x() + vec.x() < getWidth() &&
                 entity.getPosition().y() + vec.y() >= 0 && entity.getPosition().y() + vec.y() < getHeight();
     }
 
-    public void performMoveOnGrid(Entity entity, Direction direction){
+    public void performMoveOnGrid(Entity entity, Direction direction) {
         if (canMove(entity, direction)) {
             ((Movable) entity).move(direction.getVector());
         }
     }
+
+    public void performMoveOnGridTestMode(Entity entity, Direction direction) {
+        if (canMove(entity, direction)) {
+            ((Movable) entity).move(direction.getVector());
+        }
+        else {
+            movablesThatCouldNotMove.add(entity);
+        }
+    }
+
+    public int getWidth() { return this.width; }
+
+    public int getHeight() { return this.height; }
+
+    public Map<Vector2d, List<Entity>> getEntitiesMap() { return entities; }
+
+    public List<Entity> getEntitiesList() { return entities.values().stream().flatMap(List::stream).toList(); }
+
+    public void setEntities(Map<Vector2d, List<Entity>> entities) { this.entities = entities; }
+
+    public List<Entity> getMovablesThatCouldNotMove() { return movablesThatCouldNotMove; }
+
+    public void setMovablesThatCouldNotMove(List<Entity> movablesThatCouldNotMove) { this.movablesThatCouldNotMove = movablesThatCouldNotMove; }
 }

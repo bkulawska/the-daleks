@@ -14,7 +14,8 @@ import java.util.Random;
 
 public class Engine {
 
-    private final Grid grid;
+    /* grid not final for test purposes - needed to set grid to test Engine.moveMovables() */
+    private Grid grid;
     private final CollisionDetector collisionDetector;
     private final CollisionResolver collisionResolver;
 
@@ -34,6 +35,8 @@ public class Engine {
     public List<Entity> getEntitiesList() {
         return grid.getEntitiesList();
     }
+
+    public void setGrid(Grid grid) { this.grid = grid; }
 
     /**
      * Do one round logic
@@ -67,5 +70,4 @@ public class Engine {
         // put stored, moved entities back to hash map
         movableEntities.forEach(grid::place);
     }
-
 }

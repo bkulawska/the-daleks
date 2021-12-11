@@ -6,7 +6,7 @@ import utils.Vector2d;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("Check Vector2d and Directions work")
-public class JUnitTestUtils {
+public class TestUtils {
     @Test
     public void Vector2dTest(){
         // Given, when

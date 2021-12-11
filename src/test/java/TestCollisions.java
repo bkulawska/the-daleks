@@ -14,17 +14,15 @@ import utils.Vector2d;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Nested
 @DisplayName("Collision detection and resolving tests")
-public class JUnitTestCollisions {
+public class TestCollisions {
     private final ExampleEntities exampleEntities = new ExampleEntities();
 
     @Test
-    @DisplayName("Compare expected collisions with those detected by CollisionDetector")
+    @DisplayName("Compare expected collisions from ExampleEntities with those detected by CollisionDetector")
     void collisionDetectorTest() {
         // Given
         Map<Vector2d, List<Entity>> entitiesMap = exampleEntities.getEntities();
@@ -49,8 +47,8 @@ public class JUnitTestCollisions {
         private Grid grid;
 
         @Test
-        @DisplayName("Check whether runnable CollisionResolver's function handlers have completed their runtime")
-        public void collisionResolverTest() throws InterruptedException, ExecutionException {
+        @DisplayName("Check whether collisions have been resolved by comparing flags from CollisionResolver")
+        public void collisionResolverTest() {
             // Given
             Map<Vector2d, List<Entity>> entitiesMap = exampleEntities.getEntities();
 
