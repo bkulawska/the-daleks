@@ -17,8 +17,8 @@ public class GameComputations {
         return vec.getConvexAngleBetween(verticalAxisVector);
     }
 
-    public static double getRelativeAngleWithVerticalAxis(Vector2d translationVectorToDoctor) {
-        Vector2d opposite = translationVectorToDoctor.getSelfOpposite();
+    public static double getRelativeAngleWithVerticalAxis(Vector2d translationVector) {
+        Vector2d opposite = translationVector.getSelfOpposite();
         double angle = getConvexAngleWithVerticalAxis(opposite);
         if (opposite.x() > 0) {
             return (double) (360 - angle);

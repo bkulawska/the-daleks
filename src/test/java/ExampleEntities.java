@@ -80,13 +80,13 @@ public class ExampleEntities {
             }
 
             // Create pileOfCrap-pileOfCrap collisions
-//            if (i % 2 != 0 && i % 3 != 0 && i % 5 == 0) {
-//                PileOfCrap p1 = new PileOfCrap(i, i);
-//                placePileOfCrap(p1);
-//                PileOfCrap p2 = new PileOfCrap(i, i);
-//                placePileOfCrap(p2);
-//                expectedCollisions.add(new Pair<>(p1, p2));
-//            }
+            if (i % 2 != 0 && i % 3 != 0 && i % 5 == 0) {
+                PileOfCrap p1 = new PileOfCrap(i, i);
+                placePileOfCrap(p1);
+                PileOfCrap p2 = new PileOfCrap(i, i);
+                placePileOfCrap(p2);
+                expectedCollisions.add(new Pair<>(p1, p2));
+            }
         }
     }
 
