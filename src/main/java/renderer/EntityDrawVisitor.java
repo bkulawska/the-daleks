@@ -2,9 +2,10 @@ package renderer;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import model.entity.Animal;
+import model.entity.Dalek;
+import model.entity.Doctor;
 import model.entity.Entity;
-import model.entity.Rock;
+import model.entity.PileOfCrap;
 import utils.EntityVisitor;
 import utils.Vector2d;
 
@@ -26,13 +27,18 @@ public class EntityDrawVisitor implements EntityVisitor {
     }
 
     @Override
-    public void visitAnimal(Animal animal) {
-        drawColoredSquare(animal.position, Color.BROWN);
+    public void visitDalek(Dalek dalek) {
+        drawColoredSquare(dalek.position, Color.BLACK);
     }
 
     @Override
-    public void visitRock(Rock rock) {
-        drawColoredSquare(rock.position, Color.GREY);
+    public void visitDoctor(Doctor doctor) {
+        drawColoredSquare(doctor.position, Color.BLUE);
+    }
+
+    @Override
+    public void visitPileOfCrap(PileOfCrap pileOfCrap){
+        drawColoredSquare(pileOfCrap.position, Color.ORANGE);
     }
 
     private void drawColoredSquare(Vector2d position, Color color) {

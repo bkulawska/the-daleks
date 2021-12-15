@@ -25,7 +25,7 @@ public class TestCollisions {
     @DisplayName("Compare expected collisions from ExampleEntities with those detected by CollisionDetector")
     void collisionDetectorTest() {
         // Given
-        Map<Vector2d, List<Entity>> entitiesMap = exampleEntities.getEntities();
+        Map<Vector2d, List<Entity>> entitiesMap = exampleEntities.getEntitiesMap();
         List<Pair<Entity, Entity>> expectedCollisions = exampleEntities.getExpectedCollisions();
 
         // When
@@ -50,7 +50,7 @@ public class TestCollisions {
         @DisplayName("Check whether collisions have been resolved by comparing flags from CollisionResolver")
         public void collisionResolverTest() {
             // Given
-            Map<Vector2d, List<Entity>> entitiesMap = exampleEntities.getEntities();
+            Map<Vector2d, List<Entity>> entitiesMap = exampleEntities.getEntitiesMap();
 
             // When
             CollisionDetector collisionDetector = new CollisionDetector();

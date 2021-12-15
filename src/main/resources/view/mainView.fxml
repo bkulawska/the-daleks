@@ -48,7 +48,7 @@
                   <Insets />
                </HBox.margin>
                <image>
-                  <Image url="@../image/baby_yoda.png" />
+                  <Image url="@../image/doctor_daleks.png" />
                </image>
             </ImageView>
             <Label alignment="CENTER_RIGHT" text="Welcome to IT-Toads project">

@@ -3,17 +3,21 @@ import model.Engine;
 import model.Grid;
 import model.collisions.CollisionDetector;
 import model.collisions.CollisionResolver;
-import model.entity.Animal;
+import model.entity.Dalek;
+import model.entity.Doctor;
 import model.entity.Entity;
 import model.entity.Movable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 import org.mockito.invocation.InvocationOnMock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 import utils.Direction;
 import utils.Vector2d;
@@ -30,12 +34,13 @@ public class TestGridAndEngine {
 
     @Nested
     class TestGrid {
-        private final Grid grid = new Grid(30, 20);
+        private final Grid grid = new Grid(GuiceModule.provideGridWidth(), GuiceModule.provideGridHeight());
 
         @Test
         @DisplayName("Checking grid boundaries")
         public void canMoveTest() {
-            grid.place(new Animal(0, 1));
+            grid.setDoctor(new Doctor(2, 2));
+            grid.placeDalek(new Dalek(0, 1));
             grid.getEntitiesMap().get(new Vector2d(0, 1))
                     .forEach(entity -> {
                         assertTrue(grid.canMove(entity, Direction.NORTH));
@@ -51,11 +56,17 @@ public class TestGridAndEngine {
     }
 
     @Nested
+    @RunWith(MockitoJUnitRunner.class)
     class TestEngine {
-        private ExampleEntities exampleEntities = new ExampleEntities();
 
-        @Mock
-        private Grid grid;
+        private final ExampleEntities exampleEntities = new ExampleEntities();
+
+        class Cell {
+            List<Entity> list = new ArrayList<>();
+        }
+
+        @Spy
+        private final Grid grid = new Grid(GuiceModule.provideGridWidth(), GuiceModule.provideGridHeight());
         @Mock
         CollisionDetector collisionDetector = new CollisionDetector();
         @Mock
@@ -64,19 +75,16 @@ public class TestGridAndEngine {
         @InjectMocks
         private Engine engine;
 
-        public void initialiseMock() {
-            MockitoAnnotations.openMocks(this);
-            grid = mock(Grid.class, CALLS_REAL_METHODS);
-        }
+        public void initialiseMock() { MockitoAnnotations.openMocks(this); }
 
         public void setMockParameters() {
-            grid.setEntities(exampleEntities.getEntities());
+            grid.setDoctor(exampleEntities.getDoctor());
+            grid.setDaleks(exampleEntities.getDaleks());
+            grid.setPilesOfCrap(exampleEntities.getPilesOfCrap());
             grid.setMovablesThatCouldNotMove(new ArrayList<>());
         }
 
-        public void provideEngineWithMockedGrid() {
-            engine.setGrid(grid);
-        }
+        public void provideEngineWithMockedGrid() { engine.setGrid(grid); }
 
         /**
          * Stub Grid.performMoveOnGrid with Grid.performMoveOnGridTestMode
@@ -101,15 +109,7 @@ public class TestGridAndEngine {
             provideEngineWithMockedGrid();
         }
 
-        @Test
-        @DisplayName("If movables can move (Grid.canMove), they should. Unmovables should stay.")
-        public void moveMovablesTest() {
-
-            class Cell {
-                List<Entity> list = new ArrayList<>();
-            }
-
-            // Memorise previous positions
+        public Cell[][] initialiseTestAttributes() {
             int width = GuiceModule.provideGridWidth();
             int height = GuiceModule.provideGridHeight();
             Cell[][] memorisedPreviousPositions = new Cell[width][height];
@@ -118,16 +118,28 @@ public class TestGridAndEngine {
                     memorisedPreviousPositions[i][j] = new Cell();
                 }
             }
+            return memorisedPreviousPositions;
+        }
 
-            for (var entityList : exampleEntities.getEntities().values()) {
+        @Test
+        @DisplayName("If movables can move (Grid.canMove), they should. Unmovables should stay.")
+        public void moveMovablesTest() {
+            Cell[][] memorisedPreviousPositions = initialiseTestAttributes();
+
+            // Given
+            for (var entityList : exampleEntities.getEntitiesMap().values()) {
                 for (var entity : entityList) {
+                    // Memorise previous positions
                     memorisedPreviousPositions[entity.getPosition().x()][entity.getPosition().y()].list.add(entity);
                 }
             }
 
+            // When
             // Move movables
-            engine.moveMovables();
+            Vector2d exampleDoctorsMove = Direction.SOUTH.getVector();
+            engine.moveMovables(exampleDoctorsMove);
 
+            // Then
             /* All the movables that could have changed their position should have,
             all of the unmovables should have stayed at their previous positions */
             grid.getEntitiesMap().values().stream()
@@ -138,13 +150,16 @@ public class TestGridAndEngine {
                             var movableEntityHadToStay = grid.getMovablesThatCouldNotMove().contains(entity);
                             // !canMove(entity)
                             if (movableEntityHadToStay) {
+                                System.out.println("Movable, but had to stay " + entity);
                                 assertFalse(entityChangedItsPosition);
                             }
                             // canMove(entity)
                             else {
+                                System.out.println("Movable, moved " + entity);
                                 assertTrue(entityChangedItsPosition);
                             }
                         } else {
+                            System.out.println("Unmovable, I can't move anyway, so... " + entity);
                             assertFalse(entityChangedItsPosition);
                         }
                     });

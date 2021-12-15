@@ -1,13 +1,16 @@
 package utils;
 
-import model.entity.Animal;
+import model.entity.Dalek;
+import model.entity.Doctor;
 import model.entity.Entity;
-import model.entity.Rock;
+import model.entity.PileOfCrap;
 
 public interface EntityVisitor {
     void visitEntity(Entity entity);
 
-    void visitAnimal(Animal animal);
+    void visitDalek(Dalek dalek);
 
-    void visitRock(Rock rock);
+    void visitDoctor(Doctor doctor);
+
+    void visitPileOfCrap(PileOfCrap pileOfCrap);
 }

@@ -1,8 +1,9 @@
 import guice.GuiceModule;
 import javafx.util.Pair;
-import model.entity.Animal;
+import model.entity.Dalek;
+import model.entity.Doctor;
 import model.entity.Entity;
-import model.entity.Rock;
+import model.entity.PileOfCrap;
 import utils.Vector2d;
 
 import java.util.ArrayList;
@@ -11,60 +12,95 @@ import java.util.List;
 import java.util.Map;
 
 public class ExampleEntities {
-    private Map<Vector2d, List<Entity>> entities;
+    private Map<Vector2d, List<Entity>> daleks;
+    private Map<Vector2d, List<Entity>> pilesOfCrap;
+    private Doctor doctor;
     private List<Pair<Entity, Entity>> expectedCollisions;
 
     public ExampleEntities() {
-        this.entities = new HashMap<>();
+        this.daleks = new HashMap<>();
+        this.pilesOfCrap = new HashMap<>();
         this.expectedCollisions = new ArrayList<>();
         createSample();
     }
 
-    public void placeEntity(Entity entity){
-        var key = entity.getPosition();
+    public void placeDalek(Dalek dalek){
+        var key = dalek.getPosition();
+        daleks.computeIfAbsent(key, value -> new ArrayList<>());
+        daleks.get(key).add(dalek);
+    }
+
+    public void placePileOfCrap(PileOfCrap pileOfCrap){
+        var key = pileOfCrap.getPosition();
+        pilesOfCrap.computeIfAbsent(key, value -> new ArrayList<>());
+        pilesOfCrap.get(key).add(pileOfCrap);
+    }
+
+    public Map<Vector2d, List<Entity>> getEntitiesMap() {
+        Map<Vector2d, List<Entity>> entities = new HashMap<>();
+        entities.putAll(daleks);
+        entities.putAll(pilesOfCrap);
+        var key = this.doctor.getPosition();
         entities.computeIfAbsent(key, value -> new ArrayList<>());
-        entities.get(key).add(entity);
+        entities.get(key).add(doctor);
+        return entities;
+    }
+
+    public List<Entity> getEntitiesList() {
+        Map<Vector2d, List<Entity>> entities = getEntitiesMap();
+        return entities.values().stream().flatMap(List::stream).toList();
     }
 
     public void createSample(){
         int smallerDimension = Math.min(GuiceModule.provideGridWidth(),GuiceModule.provideGridHeight());
+        this.doctor = new Doctor(10, 10);
+
+        //create dalek-doctor collision
+        Dalek d = new Dalek(10, 10);
+        placeDalek(d);
+        expectedCollisions.add(new Pair<>(d, doctor));
+
         for (int i = 0; i < smallerDimension; i++) {
-            // Create animal-animal collisions
+            // Create dalek-dalek collisions
             if (i % 2 == 0 && i % 3 != 0 && i % 5 != 0) {
-                Animal a1 = new Animal(i, i);
-                placeEntity(a1);
-                Animal a2 = new Animal(i, i);
-                placeEntity(a2);
-                expectedCollisions.add(new Pair<>(a1, a2));
+                Dalek d1 = new Dalek(i, i);
+                placeDalek(d1);
+                Dalek d2 = new Dalek(i, i);
+                placeDalek(d2);
+                expectedCollisions.add(new Pair<>(d1, d2));
             }
 
-            // Create animal-rock collisions
+            // Create dalek-pileOfCrap collisions
             if (i % 2 != 0 && i % 3 == 0 && i % 5 != 0) {
-                Animal a1 = new Animal(i, i);
-                placeEntity(a1);
-                Rock r1 = new Rock(i, i);
-                placeEntity(r1);
-                expectedCollisions.add(new Pair<>(a1, r1));
+                Dalek d1 = new Dalek(i, i);
+                placeDalek(d1);
+                PileOfCrap p1 = new PileOfCrap(i, i);
+                placePileOfCrap(p1);
+                expectedCollisions.add(new Pair<>(d1, p1));
             }
 
-            // Create rock-rock collisions
-            if (i % 2 != 0 && i % 3 != 0 && i % 5 == 0) {
-                Rock r2 = new Rock(i, i);
-                placeEntity(r2);
-                Rock r1 = new Rock(i, i);
-                placeEntity(r1);
-                expectedCollisions.add(new Pair<>(r1, r2));
-            }
+            // Create pileOfCrap-pileOfCrap collisions
+//            if (i % 2 != 0 && i % 3 != 0 && i % 5 == 0) {
+//                PileOfCrap p1 = new PileOfCrap(i, i);
+//                placePileOfCrap(p1);
+//                PileOfCrap p2 = new PileOfCrap(i, i);
+//                placePileOfCrap(p2);
+//                expectedCollisions.add(new Pair<>(p1, p2));
+//            }
         }
     }
 
-    public Map<Vector2d, List<Entity>> getEntities() {
-        return entities;
-    }
+    public Map<Vector2d, List<Entity>> getDaleks() { return daleks; }
 
-    public void setEntities(Map<Vector2d, List<Entity>> entities) {
-        this.entities = entities;
-    }
+    public void setDaleks(Map<Vector2d, List<Entity>> daleks) { this.daleks = daleks; }
+
+    public Map<Vector2d, List<Entity>> getPilesOfCrap() { return pilesOfCrap; }
+
+    public void setPilesOfCrap(Map<Vector2d, List<Entity>> pilesOfCrap) { this.pilesOfCrap = pilesOfCrap; }
+
+    public Doctor getDoctor() { return doctor; }
+
+    public void setDoctor(Doctor doctor) { this.doctor = doctor; }
 
     public List<Pair<Entity, Entity>> getExpectedCollisions() {
         return expectedCollisions;

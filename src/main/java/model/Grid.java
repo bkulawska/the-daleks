@@ -2,23 +2,22 @@ package model;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-import model.entity.Animal;
-import model.entity.Entity;
-import model.entity.Movable;
-import model.entity.Rock;
+import model.entity.*;
 import utils.Direction;
 import utils.Vector2d;
 
 import java.util.*;
 
 public class Grid {
-    /* entities not final for test purposes - needed to set example entities to test Engine.moveMovables() */
-    private Map<Vector2d, List<Entity>> entities = new HashMap<>();
+    private Map<Vector2d, List<Entity>> daleks = new HashMap<>();
+    private Map<Vector2d, List<Entity>> pilesOfCrap = new HashMap<>();
+    private Doctor doctor;
+
     private final int width;
     private final int height;
 
     /**
-     * Temporary attributes for Grid tests
+     * Temporary attribute for Grid and Engine tests
      */
     private List<Entity> movablesThatCouldNotMove;
 
@@ -28,36 +27,36 @@ public class Grid {
         this.height = height;
     }
 
-    /**
-     * Temporary method, to populate map with some animals
-     *
-     * @param count - number of animals to place
-     */
-    public void placeRandomAnimals(int count) {
-        var r = new Random();
-        for (int i=0; i<count; i++)
-            place(new Animal(r.nextInt(width), r.nextInt(height)));
+    public void placeDoctor(Vector2d position) { this.doctor = new Doctor(position.x(), position.y()); }
+
+    public void giveBirthToDoctor(Vector2d initialPosition) {
+        this.doctor = new Doctor(initialPosition.x(), initialPosition.y());
+        placeDoctor(initialPosition);
     }
 
-    /**
-     * Temporary method, to populate map with some rocks
-     * @param count - number of rocks to place
-     */
-    public void placeRandomRocks(int count) {
-        var r = new Random();
-        for (int i=0; i<count; i++)
-            place(new Rock(r.nextInt(width), r.nextInt(height)));
+    public void killDoctor(){ this.doctor.isDead = true; }
+
+    public void placeDalek(Dalek dalek){
+        var key = dalek.getPosition();
+        daleks.computeIfAbsent(key, value -> new ArrayList<>());
+        daleks.get(key).add(dalek);
     }
 
-    public void place (Entity entity){
-        var key = entity.getPosition();
-        entities.computeIfAbsent(key, value -> new ArrayList<>());
-        entities.get(key).add(entity);
+    public void removeDalek(Dalek dalek){
+        if (daleks.containsKey(dalek.getPosition())) {
+            daleks.get(dalek.getPosition()).remove(dalek);
+        }
     }
 
-    public void remove(Entity entity){
-        if (entities.containsKey(entity.getPosition())) {
-            entities.get(entity.getPosition()).remove(entity);
+    public void placePileOfCrap(PileOfCrap pileOfCrap){
+        var key = pileOfCrap.getPosition();
+        pilesOfCrap.computeIfAbsent(key, value -> new ArrayList<>());
+        pilesOfCrap.get(key).add(pileOfCrap);
+    }
+
+    public void removePileOfCrap(PileOfCrap pileOfCrap){
+        if (pilesOfCrap.containsKey(pileOfCrap.getPosition())) {
+            pilesOfCrap.get(pileOfCrap.getPosition()).remove(pileOfCrap);
         }
     }
 
@@ -73,6 +72,9 @@ public class Grid {
         }
     }
 
+    /**
+     * For Grid and Engine test purposes only
+     */
     public void performMoveOnGridTestMode(Entity entity, Direction direction) {
         if (canMove(entity, direction)) {
             ((Movable) entity).move(direction.getVector());
@@ -82,15 +84,46 @@ public class Grid {
         }
     }
 
+    public Map<Vector2d, List<Entity>> getEntitiesMap() {
+        Map<Vector2d, List<Entity>> entities = new HashMap<>();
+        entities.putAll(daleks);
+        entities.putAll(pilesOfCrap);
+        var key = this.doctor.getPosition();
+        entities.computeIfAbsent(key, value -> new ArrayList<>());
+        entities.get(key).add(doctor);
+        return entities;
+    }
+
+    public List<Entity> getEntitiesList() {
+        Map<Vector2d, List<Entity>> entities = getEntitiesMap();
+        return entities.values().stream().flatMap(List::stream).toList();
+    }
+
+    public List<Entity> getDaleksList() {
+        Map<Vector2d, List<Entity>> daleks = getDaleksMap();
+        return daleks.values().stream().flatMap(List::stream).toList();
+    }
+
+    public List<Entity> getPilesOfCrapList() {
+        Map<Vector2d, List<Entity>> pilesOfCrap = getPilesOfCrapMap();
+        return pilesOfCrap.values().stream().flatMap(List::stream).toList();
+    }
+
     public int getWidth() { return this.width; }
 
     public int getHeight() { return this.height; }
 
-    public Map<Vector2d, List<Entity>> getEntitiesMap() { return entities; }
+    public Doctor getDoctor() { return doctor; }
 
-    public List<Entity> getEntitiesList() { return entities.values().stream().flatMap(List::stream).toList(); }
+    public void setDoctor(Doctor doctor) { this.doctor = doctor; }
 
-    public void setEntities(Map<Vector2d, List<Entity>> entities) { this.entities = entities; }
+    public Map<Vector2d, List<Entity>> getDaleksMap() { return daleks; }
+
+    public void setDaleks(Map<Vector2d, List<Entity>> daleks) { this.daleks = daleks; }
+
+    public Map<Vector2d, List<Entity>> getPilesOfCrapMap() { return pilesOfCrap; }
+
+    public void setPilesOfCrap(Map<Vector2d, List<Entity>> pilesOfCrap) { this.pilesOfCrap = pilesOfCrap; }
 
     public List<Entity> getMovablesThatCouldNotMove() { return movablesThatCouldNotMove; }
 

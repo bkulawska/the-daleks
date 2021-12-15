@@ -20,12 +20,12 @@ public class GuiceModule extends AbstractModule {
     @Provides
     @Named("gridWidth")
     public static Integer provideGridWidth() {
-        return 30;
+        return 40;
     }
 
     @Provides
     @Named("gridHeight")
     public static Integer provideGridHeight() {
-        return 20;
+        return 40;
     }
 }

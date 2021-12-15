@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import model.Engine;
 import renderer.Renderer;
+import utils.Direction;
 
 
 public class MainController {
@@ -30,7 +31,7 @@ public class MainController {
     }
 
     public void onStepAction() {
-        engine.step();
+        engine.step(Direction.getRandomDirection().getVector()); // Added some vector so the project would build
         renderer.updateCanvas(engine.getEntitiesList());
     }
 }
