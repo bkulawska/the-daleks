@@ -9,11 +9,15 @@ public class Doctor extends Entity implements Movable {
 
     public Doctor(int x, int y) {
         super(x, y);
-        this.isDead=false;
+        this.isDead = false;
+    }
+
+    public void kill() {
+        this.isDead = true;
     }
 
     @Override
-    public void move(Vector2d direction){
+    public void move(Vector2d direction) {
         this.position = this.position.add(direction);
     }
 

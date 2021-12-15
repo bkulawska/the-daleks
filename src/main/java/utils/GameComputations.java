@@ -2,8 +2,6 @@ package utils;
 
 public class GameComputations {
 
-    public GameComputations() { }
-
     public static boolean valueIsBetween(double x, double lower, double upper) {
         return lower <= x && x < upper;
     }
@@ -49,9 +47,9 @@ public class GameComputations {
         return null;
     }
 
-    public static Direction getDalekDoctorDirection(Vector2d dalekPosition, Vector2d doctorPosition) {
-        Vector2d translationVectorToDoctor = getTranslationVector(dalekPosition, doctorPosition);
-        double relativeAngle = getRelativeAngleWithVerticalAxis(translationVectorToDoctor);
+    public static Direction getDirectionToTarget(Vector2d from, Vector2d to) {
+        Vector2d translationVectorToTarget = getTranslationVector(from, to);
+        double relativeAngle = getRelativeAngleWithVerticalAxis(translationVectorToTarget);
         return getAngleCorrespondingDirection(relativeAngle);
     }
 }

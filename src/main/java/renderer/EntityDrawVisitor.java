@@ -13,13 +13,7 @@ import utils.Vector2d;
  * Class responsible for drawing various entities and subclasses.
  * It uses Visitor design pattern.
  */
-public class EntityDrawVisitor implements EntityVisitor {
-
-    private final GraphicsContext context;
-
-    public EntityDrawVisitor(GraphicsContext context) {
-        this.context = context;
-    }
+public record EntityDrawVisitor(GraphicsContext context) implements EntityVisitor {
 
     @Override
     public void visitEntity(Entity entity) {
@@ -37,7 +31,7 @@ public class EntityDrawVisitor implements EntityVisitor {
     }
 
     @Override
-    public void visitPileOfCrap(PileOfCrap pileOfCrap){
+    public void visitPileOfCrap(PileOfCrap pileOfCrap) {
         drawColoredSquare(pileOfCrap.position, Color.ORANGE);
     }
 

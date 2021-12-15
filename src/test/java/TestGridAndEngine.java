@@ -1,8 +1,6 @@
 import guice.GuiceModule;
 import model.Engine;
 import model.Grid;
-import model.collisions.CollisionDetector;
-import model.collisions.CollisionResolver;
 import model.entity.Dalek;
 import model.entity.Doctor;
 import model.entity.Entity;
@@ -13,12 +11,9 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 import utils.Direction;
 import utils.Vector2d;
 
@@ -28,7 +23,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
 
 public class TestGridAndEngine {
 
@@ -67,10 +62,6 @@ public class TestGridAndEngine {
 
         @Spy
         private final Grid grid = new Grid(GuiceModule.provideGridWidth(), GuiceModule.provideGridHeight());
-        @Mock
-        CollisionDetector collisionDetector = new CollisionDetector();
-        @Mock
-        CollisionResolver collisionResolver = new CollisionResolver(grid);
 
         @InjectMocks
         private Engine engine;
@@ -90,14 +81,12 @@ public class TestGridAndEngine {
          * Stub Grid.performMoveOnGrid with Grid.performMoveOnGridTestMode
          */
         public void setStubbedPerformMoveOnGrid() {
-            doAnswer(new Answer() {
-                public Object answer(InvocationOnMock invocation) {
-                    Object[] args = invocation.getArguments();
-                    Entity entity = (Entity) args[0];
-                    Direction direction = (Direction) args[1];
-                    grid.performMoveOnGridTestMode(entity, direction);
-                    return null;
-                }
+            doAnswer(invocation -> {
+                Object[] args = invocation.getArguments();
+                Entity entity = (Entity) args[0];
+                Direction direction = (Direction) args[1];
+                grid.performMoveOnGridTestMode(entity, direction);
+                return null;
             }).when(grid).performMoveOnGrid(any(Entity.class), any(Direction.class));
         }
 
@@ -136,12 +125,12 @@ public class TestGridAndEngine {
 
             // When
             // Move movables
-            Vector2d exampleDoctorsMove = Direction.SOUTH.getVector();
+            Direction exampleDoctorsMove = Direction.SOUTH;
             engine.moveMovables(exampleDoctorsMove);
 
             // Then
             /* All the movables that could have changed their position should have,
-            all of the unmovables should have stayed at their previous positions */
+            all the unmovables should have stayed at their previous positions */
             grid.getEntitiesMap().values().stream()
                     .flatMap(List::stream)
                     .forEach(entity -> {

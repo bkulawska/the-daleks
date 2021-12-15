@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ExampleEntities {
-    private Map<Vector2d, List<Entity>> daleks;
-    private Map<Vector2d, List<Entity>> pilesOfCrap;
+    private final Map<Vector2d, List<Dalek>> daleks;
+    private final Map<Vector2d, List<PileOfCrap>> pilesOfCrap;
     private Doctor doctor;
-    private List<Pair<Entity, Entity>> expectedCollisions;
+    private final List<Pair<Entity, Entity>> expectedCollisions;
 
     public ExampleEntities() {
         this.daleks = new HashMap<>();
@@ -38,17 +38,21 @@ public class ExampleEntities {
 
     public Map<Vector2d, List<Entity>> getEntitiesMap() {
         Map<Vector2d, List<Entity>> entities = new HashMap<>();
-        entities.putAll(daleks);
-        entities.putAll(pilesOfCrap);
+
+        daleks.keySet().forEach(position -> entities.put(position, new ArrayList<>()));
+        pilesOfCrap.keySet().forEach(position -> entities.put(position, new ArrayList<>()));
+
+        for (var daleksEntry : daleks.entrySet()) {
+            entities.get(daleksEntry.getKey()).addAll(daleksEntry.getValue());
+        }
+        for (var pilesOfCrapEntry : pilesOfCrap.entrySet()) {
+            entities.get(pilesOfCrapEntry.getKey()).addAll(pilesOfCrapEntry.getValue());
+        }
+
         var key = this.doctor.getPosition();
         entities.computeIfAbsent(key, value -> new ArrayList<>());
         entities.get(key).add(doctor);
         return entities;
-    }
-
-    public List<Entity> getEntitiesList() {
-        Map<Vector2d, List<Entity>> entities = getEntitiesMap();
-        return entities.values().stream().flatMap(List::stream).toList();
     }
 
     public void createSample(){
@@ -79,34 +83,16 @@ public class ExampleEntities {
                 expectedCollisions.add(new Pair<>(d1, p1));
             }
 
-            // Create pileOfCrap-pileOfCrap collisions
-            if (i % 2 != 0 && i % 3 != 0 && i % 5 == 0) {
-                PileOfCrap p1 = new PileOfCrap(i, i);
-                placePileOfCrap(p1);
-                PileOfCrap p2 = new PileOfCrap(i, i);
-                placePileOfCrap(p2);
-                expectedCollisions.add(new Pair<>(p1, p2));
-            }
         }
     }
 
-    public Map<Vector2d, List<Entity>> getDaleks() { return daleks; }
+    public Map<Vector2d, List<Dalek>> getDaleks() { return daleks; }
 
-    public void setDaleks(Map<Vector2d, List<Entity>> daleks) { this.daleks = daleks; }
-
-    public Map<Vector2d, List<Entity>> getPilesOfCrap() { return pilesOfCrap; }
-
-    public void setPilesOfCrap(Map<Vector2d, List<Entity>> pilesOfCrap) { this.pilesOfCrap = pilesOfCrap; }
+    public Map<Vector2d, List<PileOfCrap>> getPilesOfCrap() { return pilesOfCrap; }
 
     public Doctor getDoctor() { return doctor; }
 
-    public void setDoctor(Doctor doctor) { this.doctor = doctor; }
-
     public List<Pair<Entity, Entity>> getExpectedCollisions() {
         return expectedCollisions;
-    }
-
-    public void setExpectedCollisions(List<Pair<Entity, Entity>> expectedCollisions) {
-        this.expectedCollisions = expectedCollisions;
     }
 }

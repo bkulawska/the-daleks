@@ -2,12 +2,14 @@ import javafx.util.Pair;
 import model.Grid;
 import model.collisions.CollisionDetector;
 import model.collisions.CollisionResolver;
+import model.entity.Doctor;
 import model.entity.Entity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utils.Vector2d;
 
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 @DisplayName("Collision detection and resolving tests")
 public class TestCollisions {
@@ -43,16 +46,16 @@ public class TestCollisions {
     @Nested
     @ExtendWith(MockitoExtension.class)
     public class collisionResolverTestMock {
-        @Mock
-        private Grid grid;
-
         @Test
         @DisplayName("Check whether collisions have been resolved by comparing flags from CollisionResolver")
         public void collisionResolverTest() {
             // Given
             Map<Vector2d, List<Entity>> entitiesMap = exampleEntities.getEntitiesMap();
+            Grid grid = Mockito.mock(Grid.class);
 
             // When
+            when(grid.getDoctor()).thenReturn(exampleEntities.getDoctor());
+
             CollisionDetector collisionDetector = new CollisionDetector();
             List<Pair<Entity, Entity>> detectedCollisions = collisionDetector.detect(entitiesMap);
 

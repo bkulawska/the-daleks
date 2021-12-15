@@ -9,7 +9,6 @@ import model.entity.Entity;
 import model.entity.PileOfCrap;
 import utils.Vector2d;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,15 +38,6 @@ public class CollisionResolver {
         this.handlersMap.putHandler(new Pair<>(Dalek.class, PileOfCrap.class),
                 (dalek, pileOfCrap) -> collideDalekPileOfCrap((Dalek) dalek, (PileOfCrap) pileOfCrap));
 
-        this.handlersMap.putHandler(new Pair<>(PileOfCrap.class, PileOfCrap.class),
-                (pileOfCrap, otherPileOfCrap) -> {
-                    try {
-                        collidePilesOfCrap((PileOfCrap) pileOfCrap, (PileOfCrap) otherPileOfCrap);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                });
-
         this.handlersMap.setDefaultHandler((e1, e2) ->
                 System.out.println("Handler for " + e1.getClass().getName() + " and " + e2.getClass().getName() + " not found")
         );
@@ -59,17 +49,9 @@ public class CollisionResolver {
         }
     }
 
-    public ArrayList<Runnable> getConflictSolutionsHandlers(List<Pair<Entity, Entity>> collisions){
-        ArrayList<Runnable> conflictSolutionsHandlers = new ArrayList<>();
-        for (Pair<Entity, Entity> collision : collisions) {
-            conflictSolutionsHandlers.add(handlersMap.getHandler(collision));
-        }
-        return conflictSolutionsHandlers;
-    }
-
     public void collideDalekDoctor(Dalek dalek, Doctor doctor) {
         // Actual impact
-        grid.killDoctor();
+        grid.getDoctor().kill();
 
         // For test purposes
         markCollisionAsSolved(dalek, doctor);
@@ -98,7 +80,7 @@ public class CollisionResolver {
 
     public void collideDalekPileOfCrap(Dalek d, PileOfCrap p) {
         // Actual impact:
-        // Remove dalek from the grid and leave pileOfCrap on its' place
+        // Remove dalek from the grid and leave pileOfCrap on its place
         grid.getDaleksMap().remove(d.getPosition());
 
         // For test purposes

@@ -17,19 +17,6 @@ public class TestUtils {
             assertEquals(new Vector2d(1, 0), Direction.EAST.getVector());
             assertEquals(new Vector2d(-1, -1), Direction.NORTH_WEST.getVector());
         }
-
-        @Test
-        public void testGetDirection() throws Exception {
-            // Given, when, then
-            assertEquals(Direction.NORTH, Direction.getDirection(new Vector2d(0, -1)));
-            assertEquals(Direction.NORTH_EAST, Direction.getDirection(new Vector2d(1, -1)));
-            assertEquals(Direction.EAST, Direction.getDirection(new Vector2d(1, 0)));
-            assertEquals(Direction.SOUTH_EAST, Direction.getDirection(new Vector2d(1, 1)));
-            assertEquals(Direction.SOUTH, Direction.getDirection(new Vector2d(0, 1)));
-            assertEquals(Direction.SOUTH_WEST, Direction.getDirection(new Vector2d(-1, 1)));
-            assertEquals(Direction.WEST, Direction.getDirection(new Vector2d(-1, 0)));
-            assertEquals(Direction.NORTH_WEST, Direction.getDirection(new Vector2d(-1, -1)));
-        }
     }
 
     @Nested
