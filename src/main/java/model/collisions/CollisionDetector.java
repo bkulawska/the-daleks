@@ -15,16 +15,23 @@ public class CollisionDetector {
     public CollisionDetector() {
     }
 
-    public List<Pair<Entity, Entity>> detect(Map<Vector2d, List<Entity>> entities){
+    public List<Pair<Entity, Entity>> detect(Map<Vector2d, List<Entity>> entities) {
         List<Pair<Entity, Entity>> collisions = new ArrayList<>();
-        for (var list: entities.values()) {
-            if (list.size()==2) {
-                Entity e1 = list.get(0);
-                Entity e2 = list.get(1);
-                collisions.add(new Pair<>(e1, e2));
-            }
-        }
+
+        entities.values()
+                .stream()
+                .filter(list -> list.size() > 1)
+                .forEach(list -> insertCollisionsFromList(list, collisions));
+
         return collisions;
     }
 
+    private void insertCollisionsFromList(List<Entity> list, List<Pair<Entity, Entity>> collisions) {
+        for (var entity : list) {
+            for (var otherEntity : list) {
+                if (entity == otherEntity) break;
+                collisions.add(new Pair<>(entity, otherEntity));
+            }
+        }
+    }
 }

@@ -69,10 +69,15 @@ public class TestCollisions {
             collisionResolver.resolve(detectedCollisions);
 
             // Then
-            Map<Pair<Entity, Entity>, Boolean> updatedCollisionFlags = collisionResolver.getCollisionFlags();
             for (Pair<Entity, Entity> collision : detectedCollisions) {
-                assertTrue(updatedCollisionFlags.get(collision));
+                var isCollisionSolved =
+                        collisionFlags.get(collision) || collisionFlags.get(reverseCollision(collision));
+                assertTrue(isCollisionSolved);
             }
+        }
+
+        private Pair<Entity, Entity> reverseCollision(Pair<Entity, Entity> collision) {
+            return new Pair<>(collision.getValue(), collision.getKey());
         }
     }
 }

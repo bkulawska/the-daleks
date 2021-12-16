@@ -97,11 +97,7 @@ public class CollisionResolver {
     public void markCollisionAsSolved(Entity e1, Entity e2){
         if (collisionFlags != null) {
             Pair<Entity, Entity> collidedEntitiesPair = new Pair<>(e1, e2);
-            Boolean solved = collisionFlags.get(collidedEntitiesPair);
-            if (collisionFlags.get(collidedEntitiesPair) != null && !solved) {
-                collisionFlags.remove(collidedEntitiesPair);
-                collisionFlags.put(collidedEntitiesPair, true);
-            }
+            collisionFlags.put(collidedEntitiesPair, true);
         }
     }
 

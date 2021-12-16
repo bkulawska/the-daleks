@@ -139,16 +139,13 @@ public class TestGridAndEngine {
                             var movableEntityHadToStay = grid.getMovablesThatCouldNotMove().contains(entity);
                             // !canMove(entity)
                             if (movableEntityHadToStay) {
-                                System.out.println("Movable, but had to stay " + entity);
                                 assertFalse(entityChangedItsPosition);
                             }
                             // canMove(entity)
                             else {
-                                System.out.println("Movable, moved " + entity);
                                 assertTrue(entityChangedItsPosition);
                             }
                         } else {
-                            System.out.println("Unmovable, I can't move anyway, so... " + entity);
                             assertFalse(entityChangedItsPosition);
                         }
                     });

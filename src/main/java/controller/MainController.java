@@ -8,7 +8,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.DialogEvent;
 import model.Engine;
 import model.entity.DoctorMoveEvent;
-import renderer.Renderer;
+import view.EndGameAlert;
+import view.Renderer;
 import utils.GameStatus;
 import utils.events.EventBus;
 
@@ -45,19 +46,7 @@ public class MainController {
     private void handleGameStatusChange(Observable observable, GameStatus oldStatus, GameStatus newStatus) {
         if (oldStatus != GameStatus.GAME_IN_PROGRESS && newStatus== GameStatus.GAME_IN_PROGRESS) return;
 
-        System.out.println(newStatus.toString());
-
-        String alertText = switch (newStatus) {
-            case GAME_IN_PROGRESS -> "Gra jeszcze trwa wtf";
-            case DOCTOR_WON -> "Doktor wygrał";
-            case DOCTOR_LOST -> "Doktor przegrał";
-            case EVERYBODY_DEAD -> "Wszyscy nie żyją xDD";
-        };
-
-        var alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText(alertText);
-        alert.setOnCloseRequest(this::resetEngine);
-        alert.show();
+        new EndGameAlert(newStatus, this::resetEngine).show();
     }
 
     private void resetEngine(DialogEvent dialogEvent) {

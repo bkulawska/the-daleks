@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Grid {
     private Map<Vector2d, List<Dalek>> daleks = new HashMap<>();
-    private Map<Vector2d, List<PileOfCrap>> pilesOfCrap = new HashMap<>();
+    private Map<Vector2d, PileOfCrap> pilesOfCrap = new HashMap<>();
     private Doctor doctor;
 
     private final int width;
@@ -45,8 +45,7 @@ public class Grid {
 
     public void placePileOfCrap(PileOfCrap pileOfCrap) {
         var key = pileOfCrap.getPosition();
-        pilesOfCrap.computeIfAbsent(key, value -> new ArrayList<>());
-        pilesOfCrap.get(key).add(pileOfCrap);
+        pilesOfCrap.putIfAbsent(key, pileOfCrap);
     }
 
     public boolean canMove(Entity entity, Direction direction) {
@@ -88,7 +87,7 @@ public class Grid {
             entities.get(daleksEntry.getKey()).addAll(daleksEntry.getValue());
         }
         for (var pilesOfCrapEntry : pilesOfCrap.entrySet()) {
-            entities.get(pilesOfCrapEntry.getKey()).addAll(pilesOfCrapEntry.getValue());
+            entities.get(pilesOfCrapEntry.getKey()).add(pilesOfCrapEntry.getValue());
         }
 
         var key = this.doctor.getPosition();
@@ -129,7 +128,7 @@ public class Grid {
         this.daleks = daleks;
     }
 
-    public void setPilesOfCrap(Map<Vector2d, List<PileOfCrap>> pilesOfCrap) {
+    public void setPilesOfCrap(Map<Vector2d, PileOfCrap> pilesOfCrap) {
         this.pilesOfCrap = pilesOfCrap;
     }
 

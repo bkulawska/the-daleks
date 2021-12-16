@@ -50,12 +50,12 @@ public class Engine {
         var r = new Random();
         var randomDoctorPos = new Vector2d(r.nextInt(grid.getWidth()), r.nextInt(grid.getHeight()));
         grid.giveBirthToDoctor(randomDoctorPos);
-        placeRandomDaleks(grid.getWidth() / 3);
+        placeRandomDaleks(grid.getWidth() / 5);
     }
 
     public void updateGameStatus() {
         boolean doctorDead = grid.getDoctor().isDead;
-        boolean allDaleksDead = grid.getDaleksMap().isEmpty();
+        boolean allDaleksDead = grid.getDaleksList().isEmpty();
 
         if (!doctorDead && allDaleksDead) {
             gameStatus.setValue(GameStatus.DOCTOR_WON);

@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class ExampleEntities {
     private final Map<Vector2d, List<Dalek>> daleks;
-    private final Map<Vector2d, List<PileOfCrap>> pilesOfCrap;
+    private final Map<Vector2d, PileOfCrap> pilesOfCrap;
     private Doctor doctor;
     private final List<Pair<Entity, Entity>> expectedCollisions;
 
@@ -32,8 +32,7 @@ public class ExampleEntities {
 
     public void placePileOfCrap(PileOfCrap pileOfCrap){
         var key = pileOfCrap.getPosition();
-        pilesOfCrap.computeIfAbsent(key, value -> new ArrayList<>());
-        pilesOfCrap.get(key).add(pileOfCrap);
+        pilesOfCrap.putIfAbsent(key, pileOfCrap);
     }
 
     public Map<Vector2d, List<Entity>> getEntitiesMap() {
@@ -46,7 +45,7 @@ public class ExampleEntities {
             entities.get(daleksEntry.getKey()).addAll(daleksEntry.getValue());
         }
         for (var pilesOfCrapEntry : pilesOfCrap.entrySet()) {
-            entities.get(pilesOfCrapEntry.getKey()).addAll(pilesOfCrapEntry.getValue());
+            entities.get(pilesOfCrapEntry.getKey()).add(pilesOfCrapEntry.getValue());
         }
 
         var key = this.doctor.getPosition();
@@ -88,7 +87,7 @@ public class ExampleEntities {
 
     public Map<Vector2d, List<Dalek>> getDaleks() { return daleks; }
 
-    public Map<Vector2d, List<PileOfCrap>> getPilesOfCrap() { return pilesOfCrap; }
+    public Map<Vector2d, PileOfCrap> getPilesOfCrap() { return pilesOfCrap; }
 
     public Doctor getDoctor() { return doctor; }
 
