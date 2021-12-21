@@ -13,7 +13,6 @@ public class EndGameAlert {
 
     public EndGameAlert(GameStatus gameStatus, EventHandler<DialogEvent> closeHandler) {
         this.gameStatus = gameStatus;
-
         setupAlert(closeHandler);
     }
 
@@ -30,17 +29,17 @@ public class EndGameAlert {
 
         alert.setGraphic(imageView);
         alert.setContentText("");
-        alert.setHeaderText(alertText);
+        alert.setHeaderText("");
         alert.setTitle(alertText);
         alert.setOnCloseRequest(closeHandler);
     }
 
     private String getAlertText() {
         return switch (gameStatus) {
-            case GAME_IN_PROGRESS -> "Gra jeszcze trwa wtf";
-            case DOCTOR_WON -> "Doktor wygrał";
-            case DOCTOR_LOST -> "Doktor przegrał";
-            case EVERYBODY_DEAD -> "Wszyscy nie żyją xDD";
+            case GAME_IN_PROGRESS -> "Game in still in progress, something went wrong";
+            case DOCTOR_WON -> "You won!";
+            case DOCTOR_LOST -> "You've lost :(";
+            case EVERYBODY_DEAD -> "Everybody dead, how did it happen?";
         };
     }
 

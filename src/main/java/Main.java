@@ -12,8 +12,10 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    private static final String APP_TITLE = "IT-Toads Project";
+    private static final String APP_TITLE = "IT TOADS: DALEKS!";
     private static final String MAIN_VIEW_PATH = "view/mainView.fxml";
+    private static final int WINDOW_WIDTH = 960;
+    private static final int WINDOW_HEIGHT = 680;
 
     @Override
     public void start(Stage primaryStage)  {
@@ -30,8 +32,8 @@ public class Main extends Application {
             keyboardController.attachToScene(scene);
             // setup main window and run it
             primaryStage.setTitle(APP_TITLE);
-            primaryStage.setMinWidth(1400);
-            primaryStage.setMinHeight(1000);
+            primaryStage.setMinWidth(WINDOW_WIDTH);
+            primaryStage.setMinHeight(WINDOW_HEIGHT);
             primaryStage.setResizable(true);
             primaryStage.setScene(scene);
             primaryStage.show();
