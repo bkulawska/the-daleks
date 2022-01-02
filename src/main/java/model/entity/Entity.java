@@ -16,6 +16,6 @@ public abstract class Entity {
     }
 
     public void accept(EntityVisitor visitor) {
-        visitor.visitEntity(this);
+        visitor.visit(this);
     }
 }

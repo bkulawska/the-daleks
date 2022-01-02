@@ -5,15 +5,15 @@ import utils.Vector2d;
 
 public class Doctor extends Entity implements Movable {
 
-    public boolean isDead;
+    public boolean dead;
 
     public Doctor(int x, int y) {
         super(x, y);
-        this.isDead = false;
+        this.dead = false;
     }
 
     public void kill() {
-        this.isDead = true;
+        this.dead = true;
     }
 
     @Override
@@ -23,6 +23,6 @@ public class Doctor extends Entity implements Movable {
 
     @Override
     public void accept(EntityVisitor visitor) {
-        visitor.visitDoctor(this);
+        visitor.visit(this);
     }
 }

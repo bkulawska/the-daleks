@@ -12,8 +12,9 @@ import utils.GameComputations;
 import utils.GameStatus;
 import utils.Vector2d;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Engine {
 
@@ -22,6 +23,8 @@ public class Engine {
     private final CollisionDetector collisionDetector;
     private final CollisionResolver collisionResolver;
     private final Property<GameStatus> gameStatus = new SimpleObjectProperty<>(GameStatus.GAME_IN_PROGRESS);
+
+    private static final double DALEKS_INITIAL_DENSITY = 13e-3;
 
     @Inject
     public Engine(Grid grid, CollisionDetector collisionDetector, CollisionResolver collisionResolver) {
@@ -32,29 +35,27 @@ public class Engine {
         setUpGrid();
     }
 
-    public void placeRandomDaleks(int count) {
-        var r = new Random();
-        for (int i = 0; i < count; i++) {
-            int x = r.nextInt(grid.getWidth());
-            int y = r.nextInt(grid.getHeight());
-            if (x != grid.getDoctor().getPosition().x() && y != grid.getDoctor().getPosition().y()) {
-                grid.placeDalek(new Dalek(x, y));
-            } else {
-                i -= 1;
-            }
+    private void setUpGrid() {
+        var height = grid.getHeight();
+        var width = grid.getWidth();
+        var nDaleks = (int) (grid.getHeight() * grid.getWidth() * DALEKS_INITIAL_DENSITY);
+        List<Vector2d> freePositions = IntStream
+                .rangeClosed(0, width * height - 1)
+                .mapToObj(i -> new Vector2d(i % width, i / width))
+                .collect(Collectors.toCollection(ArrayList::new));
+        Collections.shuffle(freePositions, new Random(System.currentTimeMillis()));
+
+        // spawn doctor
+        grid.giveBirthToDoctor(freePositions.get(0));
+
+        //spawn daleks
+        for (int dalekIdx = 0; dalekIdx < nDaleks; dalekIdx ++) {
+            grid.placeDalek(new Dalek(freePositions.get(dalekIdx + 1)));
         }
     }
 
-
-    public void setUpGrid() {
-        var r = new Random();
-        var randomDoctorPos = new Vector2d(r.nextInt(grid.getWidth()), r.nextInt(grid.getHeight()));
-        grid.giveBirthToDoctor(randomDoctorPos);
-        placeRandomDaleks(grid.getWidth() / 5);
-    }
-
     public void updateGameStatus() {
-        boolean doctorDead = grid.getDoctor().isDead;
+        boolean doctorDead = grid.getDoctor().dead;
         boolean allDaleksDead = grid.getDaleksList().isEmpty();
 
         if (!doctorDead && allDaleksDead) {
@@ -73,15 +74,15 @@ public class Engine {
      * Changes will be made here according to further instructions about the game
      */
     public void step(Direction doctorsMove) {
-        if (gameStatusProperty().getValue() != GameStatus.GAME_IN_PROGRESS) return;
-
-        moveMovables(doctorsMove);
-        var collisions = collisionDetector.detect(grid.getEntitiesMap());
-        collisionResolver.resolve(collisions);
-        updateGameStatus();
+        if (gameStatusProperty().getValue() == GameStatus.GAME_IN_PROGRESS) {
+            moveMovables(doctorsMove);
+            var collisions = collisionDetector.detect(grid.getEntitiesMap());
+            collisionResolver.resolve(collisions);
+            updateGameStatus();
+        }
     }
 
-    public Direction getDalekMoveDirection(Dalek dalek) {
+    public Optional<Direction> getDalekMoveDirection(Dalek dalek) {
         return GameComputations.getDirectionToTarget(dalek.getPosition(), grid.getDoctor().getPosition());
     }
 
@@ -97,10 +98,8 @@ public class Engine {
 
         // move each dalek one step closer to the doctor
         daleksToMove.forEach(entity -> {
-            var direction = getDalekMoveDirection(entity);
-            if (direction != null) {
-                grid.performMoveOnGrid(entity, direction);
-            }
+            getDalekMoveDirection(entity)
+                    .ifPresent(direction -> grid.performMoveOnGrid(entity, direction));
         });
 
         // put stored, moved dalek entities back to hash map

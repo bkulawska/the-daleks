@@ -131,7 +131,8 @@ public class TestGridAndEngine {
             // Then
             /* All the movables that could have changed their position should have,
             all the unmovables should have stayed at their previous positions */
-            grid.getEntitiesMap().values().stream()
+            grid.getEntitiesMap().values()
+                    .stream()
                     .flatMap(List::stream)
                     .forEach(entity -> {
                         var entityChangedItsPosition = !memorisedPreviousPositions[entity.getPosition().x()][entity.getPosition().y()].list.contains(entity);

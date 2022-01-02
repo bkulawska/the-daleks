@@ -40,7 +40,7 @@ public class Main extends Application {
 
         } catch (IOException e) {
             System.err.println("Loading FXML file '" + MAIN_VIEW_PATH + "' failed.");
-            System.err.println(e.getMessage());
+            System.err.println("'" + e.getMessage() + "'");
             System.exit(0);
         }
     }

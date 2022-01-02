@@ -11,6 +11,10 @@ public class EndGameAlert {
     private final GameStatus gameStatus;
     private final Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
+    public static final String GAME_IN_PROGRESS_IMAGE = "/image/doctor_daleks.png";
+    public static final String DOCTOR_WON_IMAGE = "/image/happy_yoda.png";
+    public static final String DOCTOR_LOST_IMAGE = "/image/sad_yoda.jpeg";
+
     public EndGameAlert(GameStatus gameStatus, EventHandler<DialogEvent> closeHandler) {
         this.gameStatus = gameStatus;
         setupAlert(closeHandler);
@@ -45,9 +49,9 @@ public class EndGameAlert {
 
     private String getAlertImagePath() {
         return switch (gameStatus) {
-            case GAME_IN_PROGRESS -> "/image/doctor_daleks.png";
-            case DOCTOR_WON -> "/image/happy_yoda.png";
-            case DOCTOR_LOST, EVERYBODY_DEAD -> "/image/sad_yoda.jpeg";
+            case GAME_IN_PROGRESS -> GAME_IN_PROGRESS_IMAGE;
+            case DOCTOR_WON -> DOCTOR_WON_IMAGE;
+            case DOCTOR_LOST, EVERYBODY_DEAD -> DOCTOR_LOST_IMAGE;
         };
     }
 

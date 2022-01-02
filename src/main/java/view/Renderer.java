@@ -4,7 +4,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.transform.Affine;
 import model.entity.Entity;
 import utils.EntityVisitor;
@@ -19,6 +18,8 @@ public class Renderer {
     private final int worldWidth, worldHeight;
     private final Affine worldTransform;
     private final EntityVisitor entityDrawVisitor;
+
+    public static final String BACKGROUND_IMAGE_PATH = "image/grass.png";
 
     public Renderer(Canvas canvas, int worldWidth, int worldHeight) {
         this.canvas = canvas;
@@ -41,7 +42,7 @@ public class Renderer {
     }
 
     private void drawBackground() {
-        context.drawImage(new Image("image/grass.png"), 0, 0);
+        context.drawImage(new Image(BACKGROUND_IMAGE_PATH), 0, 0);
     }
 
     private void drawGrid() {

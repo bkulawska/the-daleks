@@ -97,11 +97,18 @@ public class Grid {
     }
 
     public List<Entity> getEntitiesList() {
-        return getEntitiesMap().values().stream().flatMap(List::stream).toList();
+        return getEntitiesMap()
+                .values()
+                .stream()
+                .flatMap(List::stream)
+                .toList();
     }
 
     public List<Dalek> getDaleksList() {
-        return daleks.values().stream().flatMap(List::stream).toList();
+        return daleks.values()
+                .stream()
+                .flatMap(List::stream)
+                .toList();
     }
 
     public int getWidth() {

@@ -2,6 +2,7 @@ package utils;
 
 public record Vector2d(int x, int y) {
 
+
     public boolean precedes(Vector2d other) {
         if (this.x <= other.x) {
             return this.y <= other.y;

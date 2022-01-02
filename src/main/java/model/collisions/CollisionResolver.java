@@ -46,22 +46,20 @@ public class CollisionResolver {
     public void resolve(List<Pair<Entity, Entity>> collisions) {
         for (Pair<Entity, Entity> collision : collisions) {
             handlersMap.getHandler(collision).run();
+            markCollisionAsSolved(collision.getKey(), collision.getValue());
+
         }
     }
 
     public void collideDalekDoctor(Dalek dalek, Doctor doctor) {
         // Actual impact
         grid.getDoctor().kill();
-
-        // For test purposes
-        markCollisionAsSolved(dalek, doctor);
         System.out.println("Solved a dalek-doctor collision");
     }
 
     // Actually nothing happens in this case
     public void collideDoctorPileOfCrap(Doctor d, PileOfCrap p) {
         // For test purposes only - no actual impact
-        markCollisionAsSolved(d, p);
         System.out.println("Solved a doctor-pileOfCrap collision");
     }
 
@@ -74,7 +72,6 @@ public class CollisionResolver {
         grid.placePileOfCrap(new PileOfCrap(mutualPosition.x(), mutualPosition.y()));
 
         // For test purposes
-        markCollisionAsSolved(d1, d2);
         System.out.println("Solved a dalek-dalek collision");
     }
 
@@ -84,13 +81,11 @@ public class CollisionResolver {
         grid.getDaleksMap().remove(d.getPosition());
 
         // For test purposes
-        markCollisionAsSolved(d, p);
         System.out.println("Solved a dalek-pileOfCrap collision");
     }
 
     public void collidePilesOfCrap(PileOfCrap p1, PileOfCrap p2) throws Exception {
         // This should not take place, unintended case - error
-        markCollisionAsSolved(p1, p2);
         throw new Exception( "Detected a pilesOfCrap-pileOfCrap collision - this shouldn't actually happen!");
     }
 

@@ -10,6 +10,6 @@ public class PileOfCrap extends Entity {
 
     @Override
     public void accept(EntityVisitor visitor) {
-        visitor.visitPileOfCrap(this);
+        visitor.visit(this);
     }
 }

@@ -1,6 +1,11 @@
 package utils;
 
+import java.util.Optional;
+
 public class GameComputations {
+
+    private static final double[] lowerBounds = { 0.0, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5 };
+    private static final double[] upperBounds = { 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5, 360.0 };
 
     public static boolean valueIsBetween(double x, double lower, double upper) {
         return lower <= x && x < upper;
@@ -24,30 +29,18 @@ public class GameComputations {
         return angle;
     }
 
-    public static Direction getAngleCorrespondingDirection(double angle) {
-        double[] lowerBounds = { 0.0, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5 };
-        double[] upperBounds = { 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5, 337.5, 360.0 };
-        Direction[] dirs = {
-                Direction.NORTH,
-                Direction.NORTH_EAST,
-                Direction.EAST,
-                Direction.SOUTH_EAST,
-                Direction.SOUTH,
-                Direction.SOUTH_WEST,
-                Direction.WEST,
-                Direction.NORTH_WEST,
-                Direction.NORTH
-        };
+    public static Optional<Direction> getAngleCorrespondingDirection(double angle) {
+        var nDirections = Direction.values().length;
 
-        for (int i = 0; i < lowerBounds.length; i++) {
+        for (int i = 0; i < nDirections + 1; i++) {
             if (valueIsBetween(angle, lowerBounds[i], upperBounds[i])) {
-                return dirs[i];
+                return Optional.of(Direction.values()[i % nDirections]);
             }
         }
-        return null;
+        return Optional.empty();
     }
 
-    public static Direction getDirectionToTarget(Vector2d from, Vector2d to) {
+    public static Optional<Direction> getDirectionToTarget(Vector2d from, Vector2d to) {
         Vector2d translationVectorToTarget = getTranslationVector(from, to);
         double relativeAngle = getRelativeAngleWithVerticalAxis(translationVectorToTarget);
         return getAngleCorrespondingDirection(relativeAngle);

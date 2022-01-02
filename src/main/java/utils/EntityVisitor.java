@@ -6,11 +6,11 @@ import model.entity.Entity;
 import model.entity.PileOfCrap;
 
 public interface EntityVisitor {
-    void visitEntity(Entity entity);
+    void visit(Entity entity);
 
-    void visitDalek(Dalek dalek);
+    void visit(Dalek dalek);
 
-    void visitDoctor(Doctor doctor);
+    void visit(Doctor doctor);
 
-    void visitPileOfCrap(PileOfCrap pileOfCrap);
+    void visit(PileOfCrap pileOfCrap);
 }

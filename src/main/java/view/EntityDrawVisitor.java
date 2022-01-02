@@ -17,24 +17,32 @@ import utils.Vector2d;
  */
 public record EntityDrawVisitor(GraphicsContext context, Affine worldTransform) implements EntityVisitor {
 
+    public static final String DALEK_IMAGE = "image/dalek.png";
+    public static final String DOCTOR_IMAGE = "image/doctor.png";
+    public static final String CRAP_IMAGE = "image/crap.png";
+    public static final Color UNKNOWN_ENTITY_COLOR = Color.HOTPINK;
     @Override
-    public void visitEntity(Entity entity) {
-        drawColoredSquare(entity.position, Color.HOTPINK);
+    public void visit(Dalek dalek) {
+        drawTexture(dalek.getPosition(), DALEK_IMAGE);
     }
 
     @Override
-    public void visitDalek(Dalek dalek) {
-        drawTexture(dalek.getPosition(), "image/dalek.png");
+    public void visit(Doctor doctor) {
+        drawTexture(doctor.getPosition(), DOCTOR_IMAGE);
     }
 
     @Override
-    public void visitDoctor(Doctor doctor) {
-        drawTexture(doctor.getPosition(), "image/doctor.png");
-    }
+    public void visit(PileOfCrap pileOfCrap) {
+        drawTexture(pileOfCrap.getPosition(), CRAP_IMAGE);    }
 
     @Override
-    public void visitPileOfCrap(PileOfCrap pileOfCrap) {
-        drawTexture(pileOfCrap.getPosition(), "image/crap.png");    }
+    public void visit(Entity entity) {
+        drawColoredSquare(entity.position, UNKNOWN_ENTITY_COLOR);
+    }
+
+    private void drawTexture(Vector2d position, String url) {
+        context.drawImage(new Image(url), position.x() * worldTransform.getMxx(), position.y() * worldTransform.getMyy());
+    }
 
     private void drawColoredSquare(Vector2d position, Color color) {
         context.setTransform(worldTransform);
@@ -43,7 +51,4 @@ public record EntityDrawVisitor(GraphicsContext context, Affine worldTransform) 
         context.setTransform(new Affine());
     }
 
-    private void drawTexture(Vector2d position, String url) {
-        context.drawImage(new Image(url), position.x() * worldTransform.getMxx(), position.y() * worldTransform.getMyy());
-    }
 }

@@ -9,6 +9,10 @@ public class Dalek extends Entity implements Movable {
         super(x, y);
     }
 
+    public Dalek(Vector2d position) {
+        super(position.x(), position.y());
+    }
+
     @Override
     public void move(Vector2d direction){
         this.position = this.position.add(direction);
@@ -16,6 +20,6 @@ public class Dalek extends Entity implements Movable {
 
     @Override
     public void accept(EntityVisitor visitor) {
-        visitor.visitDalek(this);
+        visitor.visit(this);
     }
 }
