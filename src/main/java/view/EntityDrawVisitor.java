@@ -4,10 +4,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
-import model.entity.Dalek;
-import model.entity.Doctor;
-import model.entity.Entity;
-import model.entity.PileOfCrap;
+import model.entity.*;
 import utils.EntityVisitor;
 import utils.Vector2d;
 
@@ -20,7 +17,11 @@ public record EntityDrawVisitor(GraphicsContext context, Affine worldTransform) 
     public static final String DALEK_IMAGE = "image/dalek.png";
     public static final String DOCTOR_IMAGE = "image/doctor.png";
     public static final String CRAP_IMAGE = "image/crap.png";
+    public static final String TELEPORT_IMAGE = "image/teleport.png";
+    public static final String TIME_TURNER_IMAGE = "image/time_turner.jpg";
     public static final Color UNKNOWN_ENTITY_COLOR = Color.HOTPINK;
+    public static final Color UNKNOWN_POWERUP_ENTITY_COLOR = Color.BLUEVIOLET;
+
     @Override
     public void visit(Dalek dalek) {
         drawTexture(dalek.getPosition(), DALEK_IMAGE);
@@ -33,7 +34,23 @@ public record EntityDrawVisitor(GraphicsContext context, Affine worldTransform) 
 
     @Override
     public void visit(PileOfCrap pileOfCrap) {
-        drawTexture(pileOfCrap.getPosition(), CRAP_IMAGE);    }
+        drawTexture(pileOfCrap.getPosition(), CRAP_IMAGE);
+    }
+
+    @Override
+    public void visit(Teleport teleport) {
+        drawTexture(teleport.getPosition(), TELEPORT_IMAGE);
+    }
+
+    @Override
+    public void visit(TimeTurner timeTurner) {
+        drawTexture(timeTurner.getPosition(), TIME_TURNER_IMAGE);
+    }
+
+    @Override
+    public void visit(PowerUpEntity entity) {
+        drawColoredSquare(entity.position, UNKNOWN_POWERUP_ENTITY_COLOR);
+    }
 
     @Override
     public void visit(Entity entity) {

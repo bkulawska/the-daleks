@@ -11,6 +11,7 @@ import java.util.*;
 public class Grid {
     private Map<Vector2d, List<Dalek>> daleks = new HashMap<>();
     private Map<Vector2d, PileOfCrap> pilesOfCrap = new HashMap<>();
+    private Map<Vector2d, PowerUpEntity> powerUps = new HashMap<>();
     private Doctor doctor;
 
     private final int width;
@@ -48,6 +49,11 @@ public class Grid {
         pilesOfCrap.putIfAbsent(key, pileOfCrap);
     }
 
+    public void placePowerUp(PowerUpEntity powerUp) {
+        var key = powerUp.getPosition();
+        powerUps.putIfAbsent(key, powerUp);
+    }
+
     public boolean canMove(Entity entity, Direction direction) {
         Vector2d vec = direction.getVector();
         return entity.getPosition().x() + vec.x() >= 0 && entity.getPosition().x() + vec.x() < getWidth() &&
@@ -64,6 +70,7 @@ public class Grid {
         this.doctor = null;
         this.daleks = new HashMap<>();
         this.pilesOfCrap = new HashMap<>();
+        this.powerUps = new HashMap<>();
     }
 
     /**
@@ -82,12 +89,16 @@ public class Grid {
 
         daleks.keySet().forEach(position -> entities.put(position, new ArrayList<>()));
         pilesOfCrap.keySet().forEach(position -> entities.put(position, new ArrayList<>()));
+        powerUps.keySet().forEach(position -> entities.put(position, new ArrayList<>()));
 
         for (var daleksEntry : daleks.entrySet()) {
             entities.get(daleksEntry.getKey()).addAll(daleksEntry.getValue());
         }
         for (var pilesOfCrapEntry : pilesOfCrap.entrySet()) {
             entities.get(pilesOfCrapEntry.getKey()).add(pilesOfCrapEntry.getValue());
+        }
+        for (var powerUpsEntry : powerUps.entrySet()) {
+            entities.get(powerUpsEntry.getKey()).add(powerUpsEntry.getValue());
         }
 
         var key = this.doctor.getPosition();
@@ -129,6 +140,10 @@ public class Grid {
 
     public Map<Vector2d, List<Dalek>> getDaleksMap() {
         return daleks;
+    }
+
+    public Map<Vector2d, PowerUpEntity> getPowerUpsMap() {
+        return powerUps;
     }
 
     public void setDaleks(Map<Vector2d, List<Dalek>> daleks) {

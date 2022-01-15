@@ -3,13 +3,30 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.control.Button?>
 
 <BorderPane minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #EEEEEE;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
-   <center>
+    <center>
         <Canvas fx:id="canvas" height="600.0" width="900.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
                 <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
             </BorderPane.margin>
         </Canvas>
-   </center>
+    </center>
+    <right>
+        <Button fx:id="teleportButton" BorderPane.alignment="CENTER" onAction="#handleUseTeleport">
+            <BorderPane.margin>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </BorderPane.margin>
+            Teleports: 0
+        </Button>
+    </right>
+    <left>
+        <Button fx:id="timeTurnerButton" BorderPane.alignment="CENTER" onAction="#handleUseTimeTurner">
+            <BorderPane.margin>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </BorderPane.margin>
+            Time Turners: 0
+        </Button>
+    </left>
 </BorderPane>

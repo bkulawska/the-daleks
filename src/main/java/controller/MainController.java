@@ -2,9 +2,11 @@ package controller;
 
 import com.google.inject.Inject;
 import javafx.beans.Observable;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.DialogEvent;
 import model.Engine;
 import model.entity.DoctorMoveEvent;
@@ -13,7 +15,6 @@ import view.Renderer;
 import utils.GameStatus;
 import utils.events.EventBus;
 
-
 public class MainController {
 
     private final Engine engine;
@@ -21,6 +22,12 @@ public class MainController {
 
     @FXML
     public Canvas canvas;
+
+    @FXML
+    public Button teleportButton;
+
+    @FXML
+    public Button timeTurnerButton;
 
     @Inject
     public MainController(Engine engine, EventBus eventBus) {
@@ -37,9 +44,10 @@ public class MainController {
         this.engine.gameStatusProperty().addListener(this::handleGameStatusChange);
     }
 
-
     private void handleDoctorMove(DoctorMoveEvent event) {
         engine.step(event.direction());
+        updateTeleportButton();
+        updateTimeTurnerButton();
         renderer.updateCanvas(engine.getEntitiesList());
     }
 
@@ -51,7 +59,34 @@ public class MainController {
 
     private void resetEngine(DialogEvent dialogEvent) {
         engine.reset();
+        updateTeleportButton();
+        updateTimeTurnerButton();
+        renderer.updateCanvas(engine.getEntitiesList());
+    }
 
+    private void updateTeleportButton(){
+        int teleportsAvailable = engine.getGrid().getDoctor().getNumberOfTeleportsAvailable();
+        teleportButton.setText("Teleports: " + teleportsAvailable);
+    }
+
+    private void updateTimeTurnerButton(){
+        int timeTurnersAvailable = engine.getGrid().getDoctor().getNumberOfTimeTurnersAvailable();
+        timeTurnerButton.setText("Time Turners: " + timeTurnersAvailable);
+    }
+
+    @FXML
+    public void handleUseTeleport(ActionEvent event) {
+        event.consume();
+        engine.useTeleport();
+        updateTeleportButton();
+        renderer.updateCanvas(engine.getEntitiesList());
+    }
+
+    @FXML
+    public void handleUseTimeTurner(ActionEvent event) {
+        event.consume();
+        engine.useTimeTurner();
+        updateTimeTurnerButton();
         renderer.updateCanvas(engine.getEntitiesList());
     }
 }
