@@ -15,6 +15,7 @@ import java.util.List;
 public class CampaignLevelLoader implements LevelLoader {
     private final List<Level> levels;
     private int currentLevelIndex = 0;
+    private int snapshotHistoryCapacity;
 
     public CampaignLevelLoader() {
         this.levels = LevelJSONReader.readLevels();
@@ -27,11 +28,16 @@ public class CampaignLevelLoader implements LevelLoader {
 
     @Override
     public void loadLevel(Grid grid, boolean previousLevelWon) {
+        snapshotHistoryCapacity = 0;
+
         if (previousLevelWon) {
             currentLevelIndex++;
         }
 
         load(grid, levels.get(currentLevelIndex));
+
+        // initialise gridSnapshotHistory with as many snapshots as available time-turners on the grid
+        grid.initialiseSnapshotHistory(snapshotHistoryCapacity);
     }
 
     private void load(Grid grid, Level level) {
@@ -46,7 +52,10 @@ public class CampaignLevelLoader implements LevelLoader {
             case DALEK -> grid.placeDalek(new Dalek(position));
             case PILE_OF_CRAP -> grid.placePileOfCrap(new PileOfCrap(position));
             case TELEPORT -> grid.placeTeleport(new Teleport(position));
-            case TIME_TURNER -> grid.placeTimeTurner(new TimeTurner(position));
+            case TIME_TURNER -> {
+                grid.placeTimeTurner(new TimeTurner(position));
+                snapshotHistoryCapacity++;
+            }
         }
     }
 }

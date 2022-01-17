@@ -51,5 +51,8 @@ public class RandomLevelLoader implements LevelLoader{
             var position = freePositions.remove(0);
             grid.placeTimeTurner(new TimeTurner(position));
         }
+
+        // initialise gridSnapshotHistory with proper snapshots capacity
+        grid.initialiseSnapshotHistory(nTimeTurners);
     }
 }

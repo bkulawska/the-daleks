@@ -10,11 +10,9 @@ import model.entity.Entity;
 import utils.Direction;
 import utils.GameComputations;
 import utils.GameStatus;
-import utils.Vector2d;
 
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
+import java.util.List;
+import java.util.Optional;
 
 public class Engine {
 
@@ -23,7 +21,6 @@ public class Engine {
     private final CollisionDetector collisionDetector;
     private final CollisionResolver collisionResolver;
     private final Property<GameStatus> gameStatus = new SimpleObjectProperty<>(GameStatus.GAME_IN_PROGRESS);
-
 
 
     @Inject
@@ -58,6 +55,8 @@ public class Engine {
      * Changes will be made here according to further instructions about the game
      */
     public void step(Direction doctorsMove) {
+        grid.createGridSnapshot();
+
         if (gameStatusProperty().getValue() == GameStatus.GAME_IN_PROGRESS) {
             moveMovables(doctorsMove);
             var collisions = collisionDetector.detect(grid.getEntitiesMap());
@@ -75,24 +74,10 @@ public class Engine {
     }
 
     public void teleportDoctor() {
-        if (grid.getNumberOfTeleportsAvailableToDoctor()>0){
-            var height = grid.getHeight();
-            var width = grid.getWidth();
-            List<Vector2d> freePositions = IntStream
-                    .rangeClosed(0, width * height - 1)
-                    .mapToObj(i -> new Vector2d(i % width, i / width))
-                    .collect(Collectors.toCollection(ArrayList::new));
-            Collections.shuffle(freePositions, new Random(System.currentTimeMillis()));
-            grid.teleportDoctor(freePositions.get(0));
-        }
+        grid.getDoctor().useTeleport(grid);
     }
     public void turnBackTime() {
-        if (grid.getNumberOfTimeTurnersAvailableToDoctor()>0){
-
-            //CODE NEEDED to turn back time
-
-            grid.decrementNumberOfTimeTurnersAvailableToDoctor();
-        }
+        grid.getDoctor().useTimeTurner(grid);
     }
 
 

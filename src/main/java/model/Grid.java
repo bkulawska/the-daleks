@@ -3,6 +3,8 @@ package model;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 import model.entity.*;
+import model.memento.GridSnapshot;
+import model.memento.SnapshotHistory;
 import utils.Direction;
 import utils.Vector2d;
 
@@ -15,8 +17,7 @@ public class Grid {
     private Map<Vector2d, TimeTurner> timeTurners = new HashMap<>();
     private Doctor doctor;
 
-    private int numberOfTeleportsAvailableToDoctor = 0;
-    private int numberOfTimeTurnersAvailableToDoctor = 0;
+    private SnapshotHistory snapshotHistory;
 
     private final int width;
     private final int height;
@@ -34,11 +35,6 @@ public class Grid {
 
     public void giveBirthToDoctor(Vector2d initialPosition) {
         this.doctor = new Doctor(initialPosition.x(), initialPosition.y());
-    }
-
-    public void teleportDoctor(Vector2d teleportPosition) {
-        decrementNumberOfTeleportsAvailableToDoctor();
-        getDoctor().teleport(teleportPosition);
     }
 
     public void placeDalek(Dalek dalek) {
@@ -80,38 +76,30 @@ public class Grid {
         }
     }
 
-    public int getNumberOfTeleportsAvailableToDoctor() {
-        return this.numberOfTeleportsAvailableToDoctor;
-    }
-
-    public void incrementNumberOfTeleportsAvailableToDoctor() {
-        this.numberOfTeleportsAvailableToDoctor++;
-    }
-
-    public void decrementNumberOfTeleportsAvailableToDoctor() {
-        this.numberOfTeleportsAvailableToDoctor--;
-    }
-
-    public int getNumberOfTimeTurnersAvailableToDoctor() {
-        return this.numberOfTimeTurnersAvailableToDoctor;
-    }
-
-    public void incrementNumberOfTimeTurnersAvailableToDoctor() {
-        this.numberOfTimeTurnersAvailableToDoctor++;
-    }
-
-    public void decrementNumberOfTimeTurnersAvailableToDoctor() {
-        this.numberOfTimeTurnersAvailableToDoctor--;
-    }
-
     public void reset() {
         this.doctor = null;
         this.daleks = new HashMap<>();
         this.pilesOfCrap = new HashMap<>();
         this.teleports = new HashMap<>();
         this.timeTurners = new HashMap<>();
-        this.numberOfTeleportsAvailableToDoctor = 0;
-        this.numberOfTimeTurnersAvailableToDoctor = 0;
+        this.snapshotHistory = null;
+    }
+
+    public void initialiseSnapshotHistory(int maxSnapshots) {
+        snapshotHistory = new SnapshotHistory(maxSnapshots);
+    }
+
+    public void createGridSnapshot(){
+        snapshotHistory.addSnapshot(new GridSnapshot(daleks, pilesOfCrap, doctor));
+    }
+
+    public void restoreLatestSnapshot() {
+        Optional<GridSnapshot> latestGridSnapshot = snapshotHistory.getMostRecentSnapshot();
+        if(latestGridSnapshot.isPresent()) {
+            this.daleks = latestGridSnapshot.get().getDaleks();
+            this.pilesOfCrap = latestGridSnapshot.get().getPilesOfCrap();
+            this.doctor = latestGridSnapshot.get().getDoctor();
+        }
     }
 
     /**
@@ -200,14 +188,6 @@ public class Grid {
 
     public void setPilesOfCrap(Map<Vector2d, PileOfCrap> pilesOfCrap) {
         this.pilesOfCrap = pilesOfCrap;
-    }
-
-    public void setTeleports(Map<Vector2d, Teleport> teleports) {
-        this.teleports = teleports;
-    }
-
-    public void setTimeTurners(Map<Vector2d, TimeTurner> timeTurners) {
-        this.timeTurners = timeTurners;
     }
 
     public List<Entity> getMovablesThatCouldNotMove() {

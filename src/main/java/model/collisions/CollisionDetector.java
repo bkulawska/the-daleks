@@ -28,9 +28,8 @@ public class CollisionDetector {
         List<Pair<Entity, Entity>> collisions = new ArrayList<>();
         for (var entity : list) {
             for (var otherEntity : list) {
-                if (entity != otherEntity) {
-                    collisions.add(new Pair<>(entity, otherEntity));
-                }
+                if (entity == otherEntity) break;
+                collisions.add(new Pair<>(entity, otherEntity));
             }
         }
         return collisions.stream();

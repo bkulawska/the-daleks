@@ -9,7 +9,6 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import model.Engine;
-import model.level_loaders.CampaignLevelLoader;
 import model.level_loaders.LevelLoader;
 import model.entity.DoctorMoveEvent;
 import dialogs.EndLevelDialog;
@@ -79,12 +78,12 @@ public class MainController {
     }
 
     private void updateTeleportButton(){
-        int teleportsAvailable = engine.getGrid().getNumberOfTeleportsAvailableToDoctor();
+        int teleportsAvailable = engine.getGrid().getDoctor().getOwnedTeleports().size();
         teleportButton.setText("Teleports: " + teleportsAvailable);
     }
 
     private void updateTimeTurnerButton(){
-        int timeTurnersAvailable = engine.getGrid().getNumberOfTimeTurnersAvailableToDoctor();
+        int timeTurnersAvailable = engine.getGrid().getDoctor().getOwnedTimeTurners().size();
         timeTurnerButton.setText("Time Turners: " + timeTurnersAvailable);
     }
 
@@ -99,10 +98,7 @@ public class MainController {
     @FXML
     public void handleUseTimeTurner(ActionEvent event) {
         event.consume();
-
-        //CODE NEEDED to turn back time
         engine.turnBackTime();
-
         updateTimeTurnerButton();
         renderer.updateCanvas(engine.getEntitiesList());
     }

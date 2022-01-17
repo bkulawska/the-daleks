@@ -20,6 +20,6 @@ public class TimeTurner extends PowerUpEntity {
     }
 
     public void use(Grid grid){
-        //CODE NEEDED to turn back time
+        grid.restoreLatestSnapshot();
     }
 }

@@ -97,8 +97,9 @@ public class CollisionResolver {
         // Remove teleport from the grid
         grid.getTeleportsMap().remove(t.getPosition());
 
-        //Increment the number of teleports
-        grid.incrementNumberOfTeleportsAvailableToDoctor();
+        //Add teleport to Doctor
+        d.addTeleport(t);
+
         // For test purposes
         System.out.println("Solved a doctor-teleport collision");
     }
@@ -108,8 +109,9 @@ public class CollisionResolver {
         // Remove time turner from the grid
         grid.getTimeTurnersMap().remove(t.getPosition());
 
-        //Increment the number of time turners
-        grid.incrementNumberOfTimeTurnersAvailableToDoctor();
+        //Add time turner to Doctor
+        d.addTimeTurner(t);
+
         // For test purposes
         System.out.println("Solved a doctor-timeTurner collision");
     }

@@ -11,11 +11,8 @@ public class Doctor extends Entity implements Movable {
 
     public boolean dead;
 
-    private int numberOfTeleports = 0;
-    private int numberOfTimeTurners = 0;
-
-    private List<Teleport> teleports = new ArrayList<>();
-    private List<TimeTurner> timeTurners = new ArrayList<>();
+    private List<Teleport> ownedTeleports = new ArrayList<>();
+    private List<TimeTurner> ownedTimeTurners = new ArrayList<>();
 
     public Doctor(int x, int y) {
         super(x, y);
@@ -41,39 +38,34 @@ public class Doctor extends Entity implements Movable {
     }
 
     public void addTeleport(Teleport teleport){
-        teleports.add(teleport);
-        this.numberOfTeleports++;
+        ownedTeleports.add(teleport);
     }
 
     public void addTimeTurner(TimeTurner timeTurner){
-        timeTurners.add(timeTurner);
-        this.numberOfTimeTurners++;
+        ownedTimeTurners.add(timeTurner);
     }
 
     public void useTeleport(Grid grid){
-        if (numberOfTeleports>0){
-            Teleport t = teleports.get(0);
+        if (ownedTeleports.size() > 0){
+            Teleport t = ownedTeleports.get(0);
             t.use(grid);
-            teleports.remove(t);
-            this.numberOfTeleports--;
+            ownedTeleports.remove(t);
         }
     }
 
     public void useTimeTurner(Grid grid){
-        if (numberOfTimeTurners>0){
-            TimeTurner t = timeTurners.get(0);
+        if (ownedTimeTurners.size() > 0){
+            TimeTurner t = ownedTimeTurners.get(0);
             t.use(grid);
-            timeTurners.remove(t);
-            this.numberOfTimeTurners--;
+            ownedTimeTurners.remove(t);
         }
     }
 
-    public int getNumberOfTeleportsAvailable() {
-        return this.numberOfTeleports;
-    }
+    public void setOwnedTeleports(List<Teleport> ownedTeleports) { this.ownedTeleports = ownedTeleports; }
 
-    public int getNumberOfTimeTurnersAvailable() {
-        return this.numberOfTimeTurners;
-    }
+    public void setOwnedTimeTurners(List<TimeTurner> ownedTimeTurners) { this.ownedTimeTurners = ownedTimeTurners; }
 
+    public List<Teleport> getOwnedTeleports() { return ownedTeleports; }
+
+    public List<TimeTurner> getOwnedTimeTurners() { return ownedTimeTurners; }
 }

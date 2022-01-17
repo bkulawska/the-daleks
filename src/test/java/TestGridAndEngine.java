@@ -1,10 +1,7 @@
 import guice.GuiceModule;
 import model.Engine;
 import model.Grid;
-import model.entity.Dalek;
-import model.entity.Doctor;
-import model.entity.Entity;
-import model.entity.Movable;
+import model.entity.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -146,7 +143,8 @@ public class TestGridAndEngine {
                             else {
                                 assertTrue(entityChangedItsPosition);
                             }
-                        } else {
+                        // Power-Ups may have been collected, but may have not as well
+                        } else if (!(entity instanceof PowerUpEntity)){
                             assertFalse(entityChangedItsPosition);
                         }
                     });
