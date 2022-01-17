@@ -1,4 +1,4 @@
-package view;
+package rendering;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -20,8 +20,6 @@ public record EntityDrawVisitor(GraphicsContext context, Affine worldTransform) 
     public static final String TELEPORT_IMAGE = "image/teleport.png";
     public static final String TIME_TURNER_IMAGE = "image/time_turner.jpg";
     public static final Color UNKNOWN_ENTITY_COLOR = Color.HOTPINK;
-    public static final Color UNKNOWN_POWERUP_ENTITY_COLOR = Color.BLUEVIOLET;
-
     @Override
     public void visit(Dalek dalek) {
         drawTexture(dalek.getPosition(), DALEK_IMAGE);
@@ -45,11 +43,6 @@ public record EntityDrawVisitor(GraphicsContext context, Affine worldTransform) 
     @Override
     public void visit(TimeTurner timeTurner) {
         drawTexture(timeTurner.getPosition(), TIME_TURNER_IMAGE);
-    }
-
-    @Override
-    public void visit(PowerUpEntity entity) {
-        drawColoredSquare(entity.position, UNKNOWN_POWERUP_ENTITY_COLOR);
     }
 
     @Override

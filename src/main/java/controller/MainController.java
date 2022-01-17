@@ -1,23 +1,26 @@
 package controller;
 
 import com.google.inject.Inject;
+import dialogs.EndCampaignDialog;
+import dialogs.GameModeChoiceDialog;
 import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.DialogEvent;
 import model.Engine;
+import model.level_loaders.CampaignLevelLoader;
+import model.level_loaders.LevelLoader;
 import model.entity.DoctorMoveEvent;
-import view.EndGameAlert;
-import view.Renderer;
+import dialogs.EndLevelDialog;
+import rendering.Renderer;
 import utils.GameStatus;
 import utils.events.EventBus;
 
 public class MainController {
 
     private final Engine engine;
+    private LevelLoader levelLoader;
     private Renderer renderer;
 
     @FXML
@@ -29,9 +32,11 @@ public class MainController {
     @FXML
     public Button timeTurnerButton;
 
+
     @Inject
     public MainController(Engine engine, EventBus eventBus) {
         this.engine = engine;
+
 
         eventBus.listen(DoctorMoveEvent.class, this::handleDoctorMove);
     }
@@ -39,9 +44,10 @@ public class MainController {
     @FXML
     public void initialize() {
         this.renderer = new Renderer(this.canvas, engine.getGrid().getWidth(), engine.getGrid().getHeight());
-        renderer.updateCanvas(engine.getEntitiesList());
-
         this.engine.gameStatusProperty().addListener(this::handleGameStatusChange);
+
+        this.levelLoader = new GameModeChoiceDialog().showAndWaitForChoice();
+        setupNextLevel();
     }
 
     private void handleDoctorMove(DoctorMoveEvent event) {
@@ -54,30 +60,38 @@ public class MainController {
     private void handleGameStatusChange(Observable observable, GameStatus oldStatus, GameStatus newStatus) {
         if (oldStatus != GameStatus.GAME_IN_PROGRESS && newStatus== GameStatus.GAME_IN_PROGRESS) return;
 
-        new EndGameAlert(newStatus, this::resetEngine).show();
+        new EndLevelDialog(newStatus, this::setupNextLevel).show();
     }
 
-    private void resetEngine(DialogEvent dialogEvent) {
+    private void setupNextLevel() {
+        boolean previousLevelWon = engine.gameStatusProperty().getValue().equals(GameStatus.DOCTOR_WON);
+
         engine.reset();
+        boolean finishedGame = !levelLoader.hasNextLevel();
+        if (finishedGame) {
+            new EndCampaignDialog().showAndExit();
+        }
+        levelLoader.loadLevel(engine.getGrid(), previousLevelWon);
+
         updateTeleportButton();
         updateTimeTurnerButton();
         renderer.updateCanvas(engine.getEntitiesList());
     }
 
     private void updateTeleportButton(){
-        int teleportsAvailable = engine.getGrid().getDoctor().getNumberOfTeleportsAvailable();
+        int teleportsAvailable = engine.getGrid().getNumberOfTeleportsAvailableToDoctor();
         teleportButton.setText("Teleports: " + teleportsAvailable);
     }
 
     private void updateTimeTurnerButton(){
-        int timeTurnersAvailable = engine.getGrid().getDoctor().getNumberOfTimeTurnersAvailable();
+        int timeTurnersAvailable = engine.getGrid().getNumberOfTimeTurnersAvailableToDoctor();
         timeTurnerButton.setText("Time Turners: " + timeTurnersAvailable);
     }
 
     @FXML
     public void handleUseTeleport(ActionEvent event) {
         event.consume();
-        engine.useTeleport();
+        engine.teleportDoctor();
         updateTeleportButton();
         renderer.updateCanvas(engine.getEntitiesList());
     }
@@ -85,7 +99,10 @@ public class MainController {
     @FXML
     public void handleUseTimeTurner(ActionEvent event) {
         event.consume();
-        engine.useTimeTurner();
+
+        //CODE NEEDED to turn back time
+        engine.turnBackTime();
+
         updateTimeTurnerButton();
         renderer.updateCanvas(engine.getEntitiesList());
     }

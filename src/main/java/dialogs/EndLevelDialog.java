@@ -1,13 +1,11 @@
-package view;
+package dialogs;
 
-import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
-import javafx.scene.control.DialogEvent;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import utils.GameStatus;
 
-public class EndGameAlert {
+public class EndLevelDialog {
     private final GameStatus gameStatus;
     private final Alert alert = new Alert(Alert.AlertType.INFORMATION);
 
@@ -15,7 +13,7 @@ public class EndGameAlert {
     public static final String DOCTOR_WON_IMAGE = "/image/happy_yoda.png";
     public static final String DOCTOR_LOST_IMAGE = "/image/sad_yoda.jpeg";
 
-    public EndGameAlert(GameStatus gameStatus, EventHandler<DialogEvent> closeHandler) {
+    public EndLevelDialog(GameStatus gameStatus, Runnable closeHandler) {
         this.gameStatus = gameStatus;
         setupAlert(closeHandler);
     }
@@ -24,7 +22,7 @@ public class EndGameAlert {
         alert.show();
     }
 
-    private void setupAlert(EventHandler<DialogEvent> closeHandler) {
+    private void setupAlert(Runnable closeHandler) {
         var alertText = getAlertText();
 
         String imagePath = String.valueOf(getClass().getResource(getAlertImagePath()));
@@ -35,7 +33,7 @@ public class EndGameAlert {
         alert.setContentText("");
         alert.setHeaderText("");
         alert.setTitle(alertText);
-        alert.setOnCloseRequest(closeHandler);
+        alert.setOnCloseRequest((e) -> closeHandler.run());
     }
 
     private String getAlertText() {

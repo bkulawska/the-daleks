@@ -11,8 +11,12 @@ import java.util.*;
 public class Grid {
     private Map<Vector2d, List<Dalek>> daleks = new HashMap<>();
     private Map<Vector2d, PileOfCrap> pilesOfCrap = new HashMap<>();
-    private Map<Vector2d, PowerUpEntity> powerUps = new HashMap<>();
+    private Map<Vector2d, Teleport> teleports = new HashMap<>();
+    private Map<Vector2d, TimeTurner> timeTurners = new HashMap<>();
     private Doctor doctor;
+
+    private int numberOfTeleportsAvailableToDoctor = 0;
+    private int numberOfTimeTurnersAvailableToDoctor = 0;
 
     private final int width;
     private final int height;
@@ -32,6 +36,11 @@ public class Grid {
         this.doctor = new Doctor(initialPosition.x(), initialPosition.y());
     }
 
+    public void teleportDoctor(Vector2d teleportPosition) {
+        decrementNumberOfTeleportsAvailableToDoctor();
+        getDoctor().teleport(teleportPosition);
+    }
+
     public void placeDalek(Dalek dalek) {
         var key = dalek.getPosition();
         daleks.computeIfAbsent(key, value -> new ArrayList<>());
@@ -49,9 +58,14 @@ public class Grid {
         pilesOfCrap.putIfAbsent(key, pileOfCrap);
     }
 
-    public void placePowerUp(PowerUpEntity powerUp) {
-        var key = powerUp.getPosition();
-        powerUps.putIfAbsent(key, powerUp);
+    public void placeTeleport(Teleport teleport) {
+        var key = teleport.getPosition();
+        teleports.putIfAbsent(key, teleport);
+    }
+
+    public void placeTimeTurner(TimeTurner timeTurner) {
+        var key = timeTurner.getPosition();
+        timeTurners.putIfAbsent(key, timeTurner);
     }
 
     public boolean canMove(Entity entity, Direction direction) {
@@ -66,11 +80,38 @@ public class Grid {
         }
     }
 
+    public int getNumberOfTeleportsAvailableToDoctor() {
+        return this.numberOfTeleportsAvailableToDoctor;
+    }
+
+    public void incrementNumberOfTeleportsAvailableToDoctor() {
+        this.numberOfTeleportsAvailableToDoctor++;
+    }
+
+    public void decrementNumberOfTeleportsAvailableToDoctor() {
+        this.numberOfTeleportsAvailableToDoctor--;
+    }
+
+    public int getNumberOfTimeTurnersAvailableToDoctor() {
+        return this.numberOfTimeTurnersAvailableToDoctor;
+    }
+
+    public void incrementNumberOfTimeTurnersAvailableToDoctor() {
+        this.numberOfTimeTurnersAvailableToDoctor++;
+    }
+
+    public void decrementNumberOfTimeTurnersAvailableToDoctor() {
+        this.numberOfTimeTurnersAvailableToDoctor--;
+    }
+
     public void reset() {
         this.doctor = null;
         this.daleks = new HashMap<>();
         this.pilesOfCrap = new HashMap<>();
-        this.powerUps = new HashMap<>();
+        this.teleports = new HashMap<>();
+        this.timeTurners = new HashMap<>();
+        this.numberOfTeleportsAvailableToDoctor = 0;
+        this.numberOfTimeTurnersAvailableToDoctor = 0;
     }
 
     /**
@@ -89,7 +130,8 @@ public class Grid {
 
         daleks.keySet().forEach(position -> entities.put(position, new ArrayList<>()));
         pilesOfCrap.keySet().forEach(position -> entities.put(position, new ArrayList<>()));
-        powerUps.keySet().forEach(position -> entities.put(position, new ArrayList<>()));
+        teleports.keySet().forEach(position -> entities.put(position, new ArrayList<>()));
+        timeTurners.keySet().forEach(position -> entities.put(position, new ArrayList<>()));
 
         for (var daleksEntry : daleks.entrySet()) {
             entities.get(daleksEntry.getKey()).addAll(daleksEntry.getValue());
@@ -97,8 +139,11 @@ public class Grid {
         for (var pilesOfCrapEntry : pilesOfCrap.entrySet()) {
             entities.get(pilesOfCrapEntry.getKey()).add(pilesOfCrapEntry.getValue());
         }
-        for (var powerUpsEntry : powerUps.entrySet()) {
-            entities.get(powerUpsEntry.getKey()).add(powerUpsEntry.getValue());
+        for (var teleportsEntry : teleports.entrySet()) {
+            entities.get(teleportsEntry.getKey()).add(teleportsEntry.getValue());
+        }
+        for (var timeTurnersEntry : timeTurners.entrySet()) {
+            entities.get(timeTurnersEntry.getKey()).add(timeTurnersEntry.getValue());
         }
 
         var key = this.doctor.getPosition();
@@ -142,8 +187,11 @@ public class Grid {
         return daleks;
     }
 
-    public Map<Vector2d, PowerUpEntity> getPowerUpsMap() {
-        return powerUps;
+    public Map<Vector2d, Teleport> getTeleportsMap() {
+        return teleports;
+    }
+    public Map<Vector2d, TimeTurner> getTimeTurnersMap() {
+        return timeTurners;
     }
 
     public void setDaleks(Map<Vector2d, List<Dalek>> daleks) {
@@ -152,6 +200,14 @@ public class Grid {
 
     public void setPilesOfCrap(Map<Vector2d, PileOfCrap> pilesOfCrap) {
         this.pilesOfCrap = pilesOfCrap;
+    }
+
+    public void setTeleports(Map<Vector2d, Teleport> teleports) {
+        this.teleports = teleports;
+    }
+
+    public void setTimeTurners(Map<Vector2d, TimeTurner> timeTurners) {
+        this.timeTurners = timeTurners;
     }
 
     public List<Entity> getMovablesThatCouldNotMove() {

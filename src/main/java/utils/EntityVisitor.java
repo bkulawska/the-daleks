@@ -5,8 +5,6 @@ import model.entity.*;
 public interface EntityVisitor {
     void visit(Entity entity);
 
-    void visit(PowerUpEntity entity);
-
     void visit(Dalek dalek);
 
     void visit(Doctor doctor);

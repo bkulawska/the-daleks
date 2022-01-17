@@ -11,6 +11,7 @@ public abstract class Entity {
         this.position = new Vector2d(x, y);
     }
 
+
     public Vector2d getPosition(){
         return position;
     }

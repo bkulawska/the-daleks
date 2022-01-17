@@ -1,0 +1,59 @@
+[
+  {
+    "entities": [
+      {
+        "position": {
+          "x": 10,
+          "y": 10
+        },
+        "code": 1
+      },
+      {
+        "position": {
+          "x": 15,
+          "y": 10
+        },
+        "code": 1
+      },
+      {
+        "position": {
+          "x": 18,
+          "y": 15
+        },
+        "code": 0
+      }
+    ]
+  },
+  {
+    "entities": [
+      {
+        "position": {
+          "x": 10,
+          "y": 10
+        },
+        "code": 1
+      },
+      {
+        "position": {
+          "x": 15,
+          "y": 10
+        },
+        "code": 1
+      },
+      {
+        "position": {
+          "x": 15,
+          "y": 7
+        },
+        "code": 1
+      },
+      {
+        "position": {
+          "x": 5,
+          "y": 5
+        },
+        "code": 0
+      }
+    ]
+  }
+]

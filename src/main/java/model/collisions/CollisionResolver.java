@@ -26,6 +26,9 @@ public class CollisionResolver {
         this.handlersMap.putHandler(new Pair<>(Dalek.class, Doctor.class),
                 (dalek, doctor) -> collideDalekDoctor((Dalek) dalek, (Doctor) doctor));
 
+        this.handlersMap.putHandler(new Pair<>(Doctor.class, PileOfCrap.class),
+                (doctor, pileOfCrap) -> collideDoctorPileOfCrap((Doctor) doctor, (PileOfCrap) pileOfCrap));
+
         this.handlersMap.putHandler(new Pair<>(Dalek.class, Dalek.class),
                 (dalek, otherDalek) -> collideDaleks((Dalek) dalek, (Dalek) otherDalek));
 
@@ -35,8 +38,20 @@ public class CollisionResolver {
         this.handlersMap.putHandler(new Pair<>(Doctor.class, Teleport.class),
                 (doctor, teleport) -> collideDoctorTeleport((Doctor) doctor, (Teleport) teleport));
 
+        this.handlersMap.putHandler(new Pair<>(Dalek.class, Teleport.class),
+                (dalek, teleport) -> collideDalekTeleport((Dalek) dalek, (Teleport) teleport));
+
+        this.handlersMap.putHandler(new Pair<>(Teleport.class, PileOfCrap.class),
+                (teleport, pileOfCrap) -> collideTeleportPileOfCrap((Teleport) teleport, (PileOfCrap) pileOfCrap));
+
         this.handlersMap.putHandler(new Pair<>(Doctor.class, TimeTurner.class),
                 (doctor, timeTurner) -> collideDoctorTimeTurner((Doctor) doctor, (TimeTurner) timeTurner));
+
+        this.handlersMap.putHandler(new Pair<>(Dalek.class, TimeTurner.class),
+                (dalek, timeTurner) -> collideDalekTimeTurner((Dalek) dalek, (TimeTurner) timeTurner));
+
+        this.handlersMap.putHandler(new Pair<>(TimeTurner.class, PileOfCrap.class),
+                (timeTurner, pileOfCrap) -> collideTimeTurnerPileOfCrap((TimeTurner) timeTurner, (PileOfCrap) pileOfCrap));
 
         this.handlersMap.setDefaultHandler((e1, e2) ->
                 System.out.println("Handler for " + e1.getClass().getName() + " and " + e2.getClass().getName() + " not found")
@@ -80,11 +95,10 @@ public class CollisionResolver {
     public void collideDoctorTeleport(Doctor d, Teleport t) {
         // Actual impact:
         // Remove teleport from the grid
-        grid.getPowerUpsMap().remove(t.getPosition());
+        grid.getTeleportsMap().remove(t.getPosition());
 
-        //Add teleport to Doctor
-        d.addTeleport(t);
-
+        //Increment the number of teleports
+        grid.incrementNumberOfTeleportsAvailableToDoctor();
         // For test purposes
         System.out.println("Solved a doctor-teleport collision");
     }
@@ -92,11 +106,10 @@ public class CollisionResolver {
     public void collideDoctorTimeTurner(Doctor d, TimeTurner t) {
         // Actual impact:
         // Remove time turner from the grid
-        grid.getPowerUpsMap().remove(t.getPosition());
+        grid.getTimeTurnersMap().remove(t.getPosition());
 
-        //Add time turner to Doctor
-        d.addTimeTurner(t);
-
+        //Increment the number of time turners
+        grid.incrementNumberOfTimeTurnersAvailableToDoctor();
         // For test purposes
         System.out.println("Solved a doctor-timeTurner collision");
     }

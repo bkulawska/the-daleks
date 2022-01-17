@@ -1,6 +1,6 @@
 package utils;
 
-public record Vector2d(int x, int y) {
+public record Vector2d(Integer x, Integer y) {
 
 
     public boolean precedes(Vector2d other) {

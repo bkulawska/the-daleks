@@ -39,8 +39,8 @@ public class Main extends Application {
             primaryStage.show();
 
         } catch (IOException e) {
-            System.err.println("Loading FXML file '" + MAIN_VIEW_PATH + "' failed.");
-            System.err.println("'" + e.getMessage() + "'");
+            System.err.println("Loading FXML file '" + MAIN_VIEW_PATH + "' failed."
+                + "Probably some problems in Controller's constructor.");
             System.exit(0);
         }
     }
