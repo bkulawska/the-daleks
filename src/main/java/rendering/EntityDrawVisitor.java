@@ -18,7 +18,7 @@ public record EntityDrawVisitor(GraphicsContext context, Affine worldTransform) 
     public static final String DOCTOR_IMAGE = "image/doctor.png";
     public static final String CRAP_IMAGE = "image/crap.png";
     public static final String TELEPORT_IMAGE = "image/teleport.png";
-    public static final String TIME_TURNER_IMAGE = "image/time_turner.jpg";
+    public static final String TIME_TURNER_IMAGE = "image/time_turner.png";
     public static final Color UNKNOWN_ENTITY_COLOR = Color.HOTPINK;
     @Override
     public void visit(Dalek dalek) {

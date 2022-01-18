@@ -14,8 +14,8 @@ public class Main extends Application {
 
     private static final String APP_TITLE = "IT TOADS: DALEKS!";
     private static final String MAIN_VIEW_PATH = "view/mainView.fxml";
-    private static final int WINDOW_WIDTH = 960;
-    private static final int WINDOW_HEIGHT = 680;
+    private static final int WINDOW_WIDTH = 1110;
+    private static final int WINDOW_HEIGHT = 640;
 
     @Override
     public void start(Stage primaryStage)  {

@@ -26,7 +26,9 @@ public class Renderer {
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
         Affine worldTransform = new Affine();
-        worldTransform.appendScale(canvas.getWidth() / (float) worldWidth, canvas.getHeight() / (float) worldHeight);
+        double cellWidth = canvas.getWidth() / (float) worldWidth;
+        double cellHeight = canvas.getHeight() / (float) worldHeight;
+        worldTransform.appendScale(cellWidth, cellHeight);
         this.entityDrawVisitor = new EntityDrawVisitor(context, worldTransform);
     }
 
