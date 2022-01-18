@@ -67,7 +67,7 @@ public class MainController {
 
         engine.reset();
         boolean finishedGame = !levelLoader.hasNextLevel();
-        if (finishedGame) {
+        if (previousLevelWon && finishedGame) {
             new EndCampaignDialog().showAndExit();
         }
         levelLoader.loadLevel(engine.getGrid(), previousLevelWon);
