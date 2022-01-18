@@ -87,8 +87,9 @@ public class MainController {
 
     private void updateLevelNumberLabel() {
         int levelNumber = levelLoader.getLevelNumber();
+        int maxLevelNumber = levelLoader.getMaxLevelNumber();
         if (levelNumber != -1) {
-            levelNumberLabel.setText(String.format("Level %d", levelNumber));
+            levelNumberLabel.setText(String.format("Level %d/%d", levelNumber, maxLevelNumber));
         } else {
             levelNumberLabel.setText("Random level");
         }

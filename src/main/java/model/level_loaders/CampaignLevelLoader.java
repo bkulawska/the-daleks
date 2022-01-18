@@ -45,6 +45,11 @@ public class CampaignLevelLoader implements LevelLoader {
         return currentLevelIndex + 1;
     }
 
+    @Override
+    public int getMaxLevelNumber() {
+        return levels.size();
+    }
+
     private void load(Grid grid, Level level) {
         level.entities.forEach((jsonEntity) -> creteEntity(jsonEntity, grid));
     }
