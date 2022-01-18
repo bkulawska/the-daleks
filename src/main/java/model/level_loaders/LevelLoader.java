@@ -4,5 +4,6 @@ import model.Grid;
 
 public interface LevelLoader {
     void loadLevel(Grid grid, boolean previousLevelWon);
+    int getLevelNumber();
     boolean hasNextLevel();
 }

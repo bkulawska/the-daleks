@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import model.Engine;
 import model.level_loaders.LevelLoader;
 import model.entity.DoctorMoveEvent;
@@ -15,6 +16,8 @@ import dialogs.EndLevelDialog;
 import rendering.Renderer;
 import utils.GameStatus;
 import utils.events.EventBus;
+
+import java.text.Format;
 
 public class MainController {
 
@@ -31,12 +34,13 @@ public class MainController {
     @FXML
     public Button timeTurnerButton;
 
+    @FXML
+    public Label levelNumberLabel;
+
 
     @Inject
     public MainController(Engine engine, EventBus eventBus) {
         this.engine = engine;
-
-
         eventBus.listen(DoctorMoveEvent.class, this::handleDoctorMove);
     }
 
@@ -57,8 +61,10 @@ public class MainController {
     }
 
     private void handleGameStatusChange(Observable observable, GameStatus oldStatus, GameStatus newStatus) {
-        if (oldStatus != GameStatus.GAME_IN_PROGRESS && newStatus== GameStatus.GAME_IN_PROGRESS) return;
-
+        if (oldStatus != GameStatus.GAME_IN_PROGRESS && newStatus== GameStatus.GAME_IN_PROGRESS) {
+            return;
+        }
+        // level won, time for the next one
         new EndLevelDialog(newStatus, this::setupNextLevel).show();
     }
 
@@ -72,9 +78,20 @@ public class MainController {
         }
         levelLoader.loadLevel(engine.getGrid(), previousLevelWon);
 
+        // update graphics for the next level
+        updateLevelNumberLabel();
         updateTeleportButton();
         updateTimeTurnerButton();
         renderer.updateCanvas(engine.getEntitiesList());
+    }
+
+    private void updateLevelNumberLabel() {
+        int levelNumber = levelLoader.getLevelNumber();
+        if (levelNumber != -1) {
+            levelNumberLabel.setText(String.format("Level %d", levelNumber));
+        } else {
+            levelNumberLabel.setText("Random level");
+        }
     }
 
     private void updateTeleportButton(){

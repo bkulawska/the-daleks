@@ -40,6 +40,11 @@ public class CampaignLevelLoader implements LevelLoader {
         grid.initialiseSnapshotHistory(snapshotHistoryCapacity);
     }
 
+    @Override
+    public int getLevelNumber() {
+        return currentLevelIndex + 1;
+    }
+
     private void load(Grid grid, Level level) {
         level.entities.forEach((jsonEntity) -> creteEntity(jsonEntity, grid));
     }

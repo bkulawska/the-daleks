@@ -55,4 +55,9 @@ public class RandomLevelLoader implements LevelLoader{
         // initialise gridSnapshotHistory with proper snapshots capacity
         grid.initialiseSnapshotHistory(nTimeTurners);
     }
+
+    @Override
+    public int getLevelNumber() {
+        return -1;
+    }
 }
