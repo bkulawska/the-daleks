@@ -24,7 +24,7 @@ public class GameComputations {
         Vector2d opposite = translationVector.getSelfOpposite();
         double angle = getConvexAngleWithVerticalAxis(opposite);
         if (opposite.x() > 0) {
-            return (double) (360 - angle);
+            return 360 - angle;
         }
         return angle;
     }

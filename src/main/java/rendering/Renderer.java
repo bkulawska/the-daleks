@@ -16,7 +16,6 @@ public class Renderer {
     private final Canvas canvas;
     private final GraphicsContext context;
     private final int worldWidth, worldHeight;
-    private final Affine worldTransform;
     private final EntityVisitor entityDrawVisitor;
 
     public static final String BACKGROUND_IMAGE_PATH = "image/grass.png";
@@ -26,7 +25,7 @@ public class Renderer {
         this.context = canvas.getGraphicsContext2D();
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
-        worldTransform = new Affine();
+        Affine worldTransform = new Affine();
         worldTransform.appendScale(canvas.getWidth() / (float) worldWidth, canvas.getHeight() / (float) worldHeight);
         this.entityDrawVisitor = new EntityDrawVisitor(context, worldTransform);
     }

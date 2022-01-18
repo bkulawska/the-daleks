@@ -11,10 +11,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GridSnapshot {
-    // Do not make these fields final, we're going to pass references to them later to the grid when snapshot restored
-    private Map<Vector2d, List<Dalek>> daleks;
-    private Map<Vector2d, PileOfCrap> pilesOfCrap;
-    private Doctor doctor;
+    private final Map<Vector2d, List<Dalek>> daleks;
+    private final Map<Vector2d, PileOfCrap> pilesOfCrap;
+    private final Doctor doctor;
 
     public GridSnapshot(Map<Vector2d, List<Dalek>> daleks, Map<Vector2d, PileOfCrap> pilesOfCrap, Doctor doctor){
         this.daleks = deepCopyDaleks(daleks);

@@ -3,7 +3,7 @@ package model.entity;
 import utils.EntityVisitor;
 import utils.Vector2d;
 
-public abstract class Entity implements Cloneable{
+public abstract class Entity implements Cloneable {
 
     public Vector2d position;
 
@@ -21,7 +21,6 @@ public abstract class Entity implements Cloneable{
     }
 
     public Object clone() throws CloneNotSupportedException {
-    // TODO Auto-generated method stub
         return super.clone();
     }
 }

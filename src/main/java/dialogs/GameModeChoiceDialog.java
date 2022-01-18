@@ -15,8 +15,8 @@ import java.util.Optional;
 public class GameModeChoiceDialog {
 
     private final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-    ButtonType random = new ButtonType("Random");
-    ButtonType campaign = new ButtonType("Campaign");
+    final ButtonType random = new ButtonType("Random");
+    final ButtonType campaign = new ButtonType("Campaign");
 
     public GameModeChoiceDialog() {
         alert.setTitle("IT-TOADS: DALEKS!");

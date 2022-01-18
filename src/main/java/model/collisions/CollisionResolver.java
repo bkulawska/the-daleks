@@ -26,9 +26,6 @@ public class CollisionResolver {
         this.handlersMap.putHandler(new Pair<>(Dalek.class, Doctor.class),
                 (dalek, doctor) -> collideDalekDoctor((Dalek) dalek, (Doctor) doctor));
 
-        this.handlersMap.putHandler(new Pair<>(Doctor.class, PileOfCrap.class),
-                (doctor, pileOfCrap) -> collideDoctorPileOfCrap((Doctor) doctor, (PileOfCrap) pileOfCrap));
-
         this.handlersMap.putHandler(new Pair<>(Dalek.class, Dalek.class),
                 (dalek, otherDalek) -> collideDaleks((Dalek) dalek, (Dalek) otherDalek));
 
@@ -38,20 +35,8 @@ public class CollisionResolver {
         this.handlersMap.putHandler(new Pair<>(Doctor.class, Teleport.class),
                 (doctor, teleport) -> collideDoctorTeleport((Doctor) doctor, (Teleport) teleport));
 
-        this.handlersMap.putHandler(new Pair<>(Dalek.class, Teleport.class),
-                (dalek, teleport) -> collideDalekTeleport((Dalek) dalek, (Teleport) teleport));
-
-        this.handlersMap.putHandler(new Pair<>(Teleport.class, PileOfCrap.class),
-                (teleport, pileOfCrap) -> collideTeleportPileOfCrap((Teleport) teleport, (PileOfCrap) pileOfCrap));
-
         this.handlersMap.putHandler(new Pair<>(Doctor.class, TimeTurner.class),
                 (doctor, timeTurner) -> collideDoctorTimeTurner((Doctor) doctor, (TimeTurner) timeTurner));
-
-        this.handlersMap.putHandler(new Pair<>(Dalek.class, TimeTurner.class),
-                (dalek, timeTurner) -> collideDalekTimeTurner((Dalek) dalek, (TimeTurner) timeTurner));
-
-        this.handlersMap.putHandler(new Pair<>(TimeTurner.class, PileOfCrap.class),
-                (timeTurner, pileOfCrap) -> collideTimeTurnerPileOfCrap((TimeTurner) timeTurner, (PileOfCrap) pileOfCrap));
 
         this.handlersMap.setDefaultHandler((e1, e2) ->
                 System.out.println("Handler for " + e1.getClass().getName() + " and " + e2.getClass().getName() + " not found")
@@ -116,51 +101,6 @@ public class CollisionResolver {
         System.out.println("Solved a doctor-timeTurner collision");
     }
 
-    // Actually nothing happens in this case
-    public void collideDoctorPileOfCrap(Doctor d, PileOfCrap p) {
-        // For test purposes only - no actual impact
-        System.out.println("Solved a doctor-pileOfCrap collision");
-    }
-
-    // Actually nothing happens in this case
-    public void collideTeleportPileOfCrap(Teleport t, PileOfCrap p) {
-        // For test purposes only - no actual impact
-        System.out.println("Solved a teleport-pileOfCrap collision");
-    }
-
-    // Actually nothing happens in this case
-    public void collideTimeTurnerPileOfCrap(TimeTurner t, PileOfCrap p) {
-        // For test purposes only - no actual impact
-        System.out.println("Solved a timeTurner-pileOfCrap collision");
-    }
-
-    // Actually nothing happens in this case
-    public void collideDalekTeleport(Dalek d, Teleport t) {
-        // For test purposes only - no actual impact
-        System.out.println("Solved a dalek-teleport collision");
-    }
-
-    // Actually nothing happens in this case
-    public void collideDalekTimeTurner(Dalek d, TimeTurner t) {
-        // For test purposes only - no actual impact
-        System.out.println("Solved a dalek-timeTurner collision");
-    }
-
-    public void collideTeleports(Teleport t1, Teleport t2) throws Exception {
-        // This should not take place, unintended case - error
-        throw new Exception( "Detected a teleport-teleport collision - this shouldn't actually happen!");
-    }
-
-    public void collideTimeTurners(TimeTurner t1, TimeTurner t2) throws Exception {
-        // This should not take place, unintended case - error
-        throw new Exception( "Detected a timeTurner-timeTurner collision - this shouldn't actually happen!");
-    }
-
-    public void collidePilesOfCrap(PileOfCrap p1, PileOfCrap p2) throws Exception {
-        // This should not take place, unintended case - error
-        throw new Exception( "Detected a pileOfCrap-pileOfCrap collision - this shouldn't actually happen!");
-    }
-
     public void markCollisionAsSolved(Entity e1, Entity e2){
         if (collisionFlags != null) {
             Pair<Entity, Entity> collidedEntitiesPair = new Pair<>(e1, e2);
@@ -172,7 +112,4 @@ public class CollisionResolver {
         this.collisionFlags = collisionFlags;
     }
 
-    public Map<Pair<Entity, Entity>, Boolean> getCollisionFlags() {
-        return collisionFlags;
-    }
 }

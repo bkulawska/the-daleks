@@ -16,7 +16,5 @@ public abstract class PowerUpEntity extends Entity {
         visitor.visit(this);
     }
 
-    public void use(Grid grid){
-
-    }
+    abstract public void use(Grid grid);
 }

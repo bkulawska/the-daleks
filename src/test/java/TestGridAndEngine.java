@@ -54,7 +54,7 @@ public class TestGridAndEngine {
         private final ExampleEntities exampleEntities = new ExampleEntities();
 
         class Cell {
-            List<Entity> list = new ArrayList<>();
+            final List<Entity> list = new ArrayList<>();
         }
 
         @Spy

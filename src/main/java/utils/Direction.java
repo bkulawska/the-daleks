@@ -1,7 +1,5 @@
 package utils;
 
-import java.util.Random;
-
 public enum Direction {
 
     NORTH (new Vector2d(0, -1)),
@@ -14,7 +12,6 @@ public enum Direction {
     NORTH_WEST (new Vector2d(-1, -1));
 
     private final Vector2d vector;
-    public static int N_DIRECTIONS = 8;
 
     Direction(Vector2d vector) {
         this.vector = vector;

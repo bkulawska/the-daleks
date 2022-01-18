@@ -28,11 +28,6 @@ public class Engine {
         this.grid = grid;
         this.collisionDetector = collisionDetector;
         this.collisionResolver = collisionResolver;
-        setUpGrid();
-    }
-
-    private void setUpGrid() {
-
     }
 
     public void updateGameStatus() {
