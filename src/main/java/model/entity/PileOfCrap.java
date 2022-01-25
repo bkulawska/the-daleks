@@ -17,4 +17,8 @@ public class PileOfCrap extends Entity {
     public void accept(EntityVisitor visitor) {
         visitor.visit(this);
     }
+
+    public PileOfCrap copy() {
+        return new PileOfCrap(this.position);
+    }
 }

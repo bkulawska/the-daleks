@@ -47,17 +47,17 @@ public class Doctor extends Entity implements Movable {
 
     public void useTeleport(Grid grid){
         if (ownedTeleports.size() > 0){
-            Teleport t = ownedTeleports.get(0);
-            t.use(grid);
-            ownedTeleports.remove(t);
+            var teleport = ownedTeleports.get(0);
+            teleport.use(grid);
+            ownedTeleports.remove(teleport);
         }
     }
 
     public void useTimeTurner(Grid grid){
         if (ownedTimeTurners.size() > 0){
-            TimeTurner t = ownedTimeTurners.get(0);
-            t.use(grid);
-            ownedTimeTurners.remove(t);
+            var timeTurner = ownedTimeTurners.get(0);
+            timeTurner.use(grid);
+            ownedTimeTurners.remove(timeTurner);
         }
     }
 
@@ -68,4 +68,11 @@ public class Doctor extends Entity implements Movable {
     public List<Teleport> getOwnedTeleports() { return ownedTeleports; }
 
     public List<TimeTurner> getOwnedTimeTurners() { return ownedTimeTurners; }
+
+    public Doctor copy() {
+        var newDoctor =  new Doctor(this.position.x(), this.position.y());
+        newDoctor.setOwnedTeleports(this.ownedTeleports);
+        newDoctor.setOwnedTimeTurners(this.ownedTimeTurners);
+        return newDoctor;
+    }
 }

@@ -77,25 +77,25 @@ public class CollisionResolver {
         System.out.println("Solved a dalek-pileOfCrap collision");
     }
 
-    public void collideDoctorTeleport(Doctor d, Teleport t) {
+    public void collideDoctorTeleport(Doctor doctor, Teleport teleport) {
         // Actual impact:
         // Remove teleport from the grid
-        grid.getTeleportsMap().remove(t.getPosition());
+        grid.removePowerUp(teleport);
 
         //Add teleport to Doctor
-        d.addTeleport(t);
+        doctor.addTeleport(teleport);
 
         // For test purposes
         System.out.println("Solved a doctor-teleport collision");
     }
 
-    public void collideDoctorTimeTurner(Doctor d, TimeTurner t) {
+    public void collideDoctorTimeTurner(Doctor doctor, TimeTurner timeTurner) {
         // Actual impact:
         // Remove time turner from the grid
-        grid.getTimeTurnersMap().remove(t.getPosition());
+        grid.removePowerUp(timeTurner);
 
         //Add time turner to Doctor
-        d.addTimeTurner(t);
+        doctor.addTimeTurner(timeTurner);
 
         // For test purposes
         System.out.println("Solved a doctor-timeTurner collision");

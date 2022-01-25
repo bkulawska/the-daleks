@@ -17,7 +17,6 @@ import rendering.Renderer;
 import utils.GameStatus;
 import utils.events.EventBus;
 
-import java.text.Format;
 
 public class MainController {
 

@@ -89,13 +89,13 @@ public class Grid {
         snapshotHistory = new SnapshotHistory(maxSnapshots);
     }
 
-    public void createGridSnapshot(){
+    public void createGridSnapshot() {
         snapshotHistory.addSnapshot(new GridSnapshot(daleks, pilesOfCrap, doctor));
     }
 
     public void restoreLatestSnapshot() {
         Optional<GridSnapshot> latestGridSnapshot = snapshotHistory.getMostRecentSnapshot();
-        if(latestGridSnapshot.isPresent()) {
+        if (latestGridSnapshot.isPresent()) {
             this.daleks = latestGridSnapshot.get().getDaleks();
             this.pilesOfCrap = latestGridSnapshot.get().getPilesOfCrap();
             this.doctor = latestGridSnapshot.get().getDoctor();
@@ -140,6 +140,15 @@ public class Grid {
         return entities;
     }
 
+    public boolean isFree(Vector2d position) {
+        if(doctor != null && doctor.position.equals(position)) return false;
+
+        return  !(daleks.containsKey(position)
+                || pilesOfCrap.containsKey(position)
+                || timeTurners.containsKey(position)
+                || teleports.containsKey(position));
+    }
+
     public List<Entity> getEntitiesList() {
         return getEntitiesMap()
                 .values()
@@ -178,6 +187,7 @@ public class Grid {
     public Map<Vector2d, Teleport> getTeleportsMap() {
         return teleports;
     }
+
     public Map<Vector2d, TimeTurner> getTimeTurnersMap() {
         return timeTurners;
     }
@@ -196,5 +206,13 @@ public class Grid {
 
     public void setMovablesThatCouldNotMove(List<Entity> movablesThatCouldNotMove) {
         this.movablesThatCouldNotMove = movablesThatCouldNotMove;
+    }
+
+    public void removePowerUp(TimeTurner timeTurner) {
+        timeTurners.remove(timeTurner.position);
+    }
+
+    public void removePowerUp(Teleport teleport) {
+        teleports.remove(teleport.position);
     }
 }

@@ -22,4 +22,8 @@ public class Dalek extends Entity implements Movable {
     public void accept(EntityVisitor visitor) {
         visitor.visit(this);
     }
+
+    public Dalek copy() {
+        return new Dalek(this.position);
+    }
 }

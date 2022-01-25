@@ -2,6 +2,7 @@ package model.entity;
 
 import model.Grid;
 import utils.EntityVisitor;
+import utils.GameComputations;
 import utils.Vector2d;
 
 import java.util.ArrayList;
@@ -27,13 +28,7 @@ public class Teleport extends PowerUpEntity {
     }
 
     public void use(Grid grid){
-        var height = grid.getHeight();
-        var width = grid.getWidth();
-        List<Vector2d> freePositions = IntStream
-                .rangeClosed(0, width * height - 1)
-                .mapToObj(i -> new Vector2d(i % width, i / width))
-                .collect(Collectors.toCollection(ArrayList::new));
-        Collections.shuffle(freePositions, new Random(System.currentTimeMillis()));
+        List<Vector2d> freePositions = GameComputations.getFreeShuffledPositions(grid);
         grid.getDoctor().teleport(freePositions.get(0));
     }
 }
