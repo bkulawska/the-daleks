@@ -208,11 +208,7 @@ public class Grid {
         this.movablesThatCouldNotMove = movablesThatCouldNotMove;
     }
 
-    public void removePowerUp(TimeTurner timeTurner) {
-        timeTurners.remove(timeTurner.position);
-    }
+    public void removePowerUp(TimeTurner timeTurner) { timeTurners.remove(timeTurner.getPosition()); }
 
-    public void removePowerUp(Teleport teleport) {
-        teleports.remove(teleport.position);
-    }
+    public void removePowerUp(Teleport teleport) { teleports.remove(teleport.getPosition()); }
 }
