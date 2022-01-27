@@ -5,7 +5,7 @@
 ## Autorzy
 
 - Barbara Kulawska ([@bkulawska](https://github.com/bkulawska))
-- Barbara Wojtarowicz
+- Barbara Wojtarowicz ([@basiav](https://github.com/bkulawskhttps://github.com/basiav))
 - Tomasz Koszarek ([@koszar91](https://github.com/koszar91))
 - Jan Zborowski ([@john-sonz](https://github.com/john-sonz))
 
